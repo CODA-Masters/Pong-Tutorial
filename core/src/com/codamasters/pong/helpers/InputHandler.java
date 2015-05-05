@@ -42,8 +42,12 @@ public class InputHandler implements InputProcessor{
 	}
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		if(screen.isScored() != 0){
+			screen.restartGame();
+		}
+		
+		return true;
 	}
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {

@@ -1,5 +1,6 @@
 package com.codamasters.pong.gameobjects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -18,6 +19,7 @@ public class Player implements ContactFilter, ContactListener {
 	private Body body;
 	private Fixture fixture;
 	private Ball ball;
+	public float width, height;
 	
 	public Player(World world, Ball ball, float x, float y, float width, float height) {
 		
@@ -26,6 +28,9 @@ public class Player implements ContactFilter, ContactListener {
 		bodyDef.type = BodyType.StaticBody;
 		bodyDef.position.set(x, y);
 		bodyDef.fixedRotation = true;
+		this.width = width;
+		this.height = height;
+		
 		
 		PolygonShape shape = new PolygonShape();
 		shape.setAsBox(width, height);
@@ -46,14 +51,12 @@ public class Player implements ContactFilter, ContactListener {
 		return body;
 	}
 	
+	public Fixture getFixture(){
+		return fixture;
+	}
+	
 	@Override
 	public void beginContact(Contact contact) {
-		Fixture fixtureA = contact.getFixtureA();
-		Fixture fixtureB = contact.getFixtureB();
-		
-		if(fixtureA == fixture){
-			
-		}
 		
 	}
 	@Override

@@ -49,6 +49,10 @@ public class Ball implements ContactFilter, ContactListener{
 	public Body getBody(){
 		return body;
 	}
+	
+	public Fixture getFixture(){
+		return fixture;
+	}
 
 	@Override
 	public void beginContact(Contact contact) {
