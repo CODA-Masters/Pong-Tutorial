@@ -1,5 +1,6 @@
 package com.codamasters.pong.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -44,32 +45,34 @@ public class gameScreen implements Screen{
 	private int scoreP2;
 	private int scored;
 	private GlyphLayout layout;
+	private boolean end;
 
 	
-	public gameScreen(){
+	public gameScreen(final Game g, boolean multiplayer){
 		float screenWidth = 1280;
 		float screenHeight = 720;
 		float gameWidth = 203;
 		float gameHeight = screenHeight / (screenWidth / gameWidth);
 		
 		camera = new OrthographicCamera(gameWidth/10, gameHeight/10);
-		camera2 = new OrthographicCamera(gameWidth, gameHeight);
+		camera2 = new OrthographicCamera(gameWidth*1.5f, gameHeight*1.5f);
 		world = new World(new Vector2(0, 0), true);
 		debugRenderer = new Box2DDebugRenderer();
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
-		layout = new GlyphLayout(); //dont do this every frame! Store it as member
+		layout = new GlyphLayout();
 		
-		multiplayer = false;
+		this.multiplayer = multiplayer;
 		angle = 0;
 		scoreP1 = 0;
 		scoreP2 = 0;
 		scored = 0;
+		end = false;
 		
 		initObjects();
 		initAssets();
 		
-		Gdx.input.setInputProcessor(new InputHandler(this, gameWidth/10, gameHeight/10));
+		Gdx.input.setInputProcessor(new InputHandler(g, this, gameWidth/10, gameHeight/10));
 		createCollisionListener();
 	}
 	
@@ -113,6 +116,10 @@ public class gameScreen implements Screen{
 		return scored;
 	}
 	
+	public boolean isEnded(){
+		return end;
+	}
+	
 	// Reinicio del juego al marcar puntos
 	public void restartGame(){
 		switch(scored){
@@ -145,12 +152,10 @@ public class gameScreen implements Screen{
 		batch.setProjectionMatrix(camera2.combined);
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		
-		// Si no estamos en modo multijugador, el jugador 2 se moverá solo siguiendo la pelota
+		// Si no estamos en modo multijugador, el jugador 2 se moverá de forma automática siguiendo la pelota
 		if(!multiplayer){
 			
-			// Movimiento automático
-			
-			//player2.getBody().setTransform(player2.getBody().getPosition().x, ball.getBody().getPosition().y+(float)rand,0);
+			// Movimiento automático (Inteligencia artificial básica)
 			
 			if(ball.getBody().getPosition().y-0.085f > player2.getBody().getPosition().y || ball.getBody().getPosition().y+0.085f < player2.getBody().getPosition().y){
 			
@@ -161,34 +166,35 @@ public class gameScreen implements Screen{
 			}
 			
 			player2.getBody().setTransform(player2.getBody().getPosition().x, posIA,0);
+		}
 			
-			// Limitar los bordes
-			if(player2.getBody().getPosition().y > 4.05f){
-				player2.getBody().setTransform(player2.getBody().getPosition().x, 4.05f,0);
-				posIA = 4.05f;
-			}
-			else if(player2.getBody().getPosition().y < -4.1f){
-				player2.getBody().setTransform(player2.getBody().getPosition().x, -4.1f,0);
-				posIA = -4.1f;
-			}
-			
-			// Si la pelota se pasa de la posición del jugador, marca punto el otro.
-			
-			if(ball.getBody().getPosition().x+2 < player.getBody().getPosition().x && scored == 0){
-				scoreP2+=1;
-				scored = 2;
-			}
-			else if (ball.getBody().getPosition().x-2 > player2.getBody().getPosition().x && scored == 0){
-				scoreP1+=1;
-				scored = 1;
-			}
-			
-			if (scored != 0){
-				ball.getBody().setTransform(0, 0, 0);
-				player.getBody().setTransform(-9,0,0);
-				player2.getBody().setTransform(9,0,0);
-				ball.getBody().setLinearVelocity(0, 0);
-			}
+		// Limitar los bordes
+		if(player2.getBody().getPosition().y > 4.05f){
+			player2.getBody().setTransform(player2.getBody().getPosition().x, 4.05f,0);
+			posIA = 4.05f;
+		}
+		else if(player2.getBody().getPosition().y < -4.1f){
+			player2.getBody().setTransform(player2.getBody().getPosition().x, -4.1f,0);
+			posIA = -4.1f;
+		}
+		
+		// Si la pelota se pasa de la posición del jugador, marca punto el otro.
+		
+		if(ball.getBody().getPosition().x+2 < player.getBody().getPosition().x && scored == 0){
+			scoreP2+=1;
+			scored = 2;
+		}
+		else if (ball.getBody().getPosition().x-2 > player2.getBody().getPosition().x && scored == 0){
+			scoreP1+=1;
+			scored = 1;
+		}
+		
+		// Reseteamos la escena a sus valores originales cuando se marca un punto
+		if (scored != 0){
+			ball.getBody().setTransform(0, 0, 0);
+			player.getBody().setTransform(-9,0,0);
+			player2.getBody().setTransform(9,0,0);
+			ball.getBody().setLinearVelocity(0, 0);
 		}
 		
 		// Aplicar fuerza a la pelota dependiendo de en qué posición se encuentre respecto al palote
@@ -196,7 +202,15 @@ public class gameScreen implements Screen{
 			ball.getBody().setLinearVelocity(0,0);
 			ball.getBody().applyForceToCenter((float)(module*Math.cos(angle)),(float)(module*Math.sin(angle)), true);
 			angle = 0;
+			AssetsLoader.pong.play();
 		}
+	
+		// Cuando algún jugador marca 10 puntos (a diferencia de 2) termina la partida
+		if((scoreP1 >= 10 || scoreP2 >=10) && Math.abs(scoreP1 - scoreP2) > 1){
+			end = true;
+		}
+		
+		// DIBUJAR LA ESCENA
 		
 		shapeRenderer.begin(ShapeType.Filled);
 		
@@ -217,13 +231,24 @@ public class gameScreen implements Screen{
 		
 		shapeRenderer.end();
 		
+		// Dibujar las puntuaciones
 		batch.begin();
 		
 		layout.setText(AssetsLoader.font, scoreP1+"");
 		float width = layout.width;// contains the width of the current set text
 		
-		AssetsLoader.font.draw(batch, scoreP1+"",-25-width/2, 50);
-		AssetsLoader.font.draw(batch, scoreP2+"", 25-width/2, 50);
+		AssetsLoader.font.draw(batch, scoreP1+"",-25-width/2, 60);
+		AssetsLoader.font.draw(batch, scoreP2+"", 25-width/2, 60);
+		
+		if(end){
+			if(scoreP1 > scoreP2){
+				AssetsLoader.font.draw(batch, "PLAYER 1 \n       WINS",-65, 0);
+			}
+			else{
+				AssetsLoader.font.draw(batch, "PLAYER 2 \n       WINS",-65, 0);
+			}
+		}
+		
 		batch.end();
 		
 		
@@ -244,7 +269,6 @@ public class gameScreen implements Screen{
 					float diff = ball.getBody().getPosition().y - player.getBody().getPosition().y;
 					
 					angle = (diff/player.height * 45)/360 * 2*Math.PI;
-					Gdx.app.log("angle", angle+"");
 					
 				}
 				
@@ -252,7 +276,6 @@ public class gameScreen implements Screen{
 					float diff = ball.getBody().getPosition().y - player2.getBody().getPosition().y;
 					
 					angle = (180 - diff/player.height * 45)/360 * 2*Math.PI;
-					Gdx.app.log("angle", angle+"");
 					
 				}
 				
@@ -305,7 +328,11 @@ public class gameScreen implements Screen{
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		AssetsLoader.dispose();
+		world.dispose();
+		debugRenderer.dispose();
+		shapeRenderer.dispose();
+		batch.dispose();
 		
 	}
 
