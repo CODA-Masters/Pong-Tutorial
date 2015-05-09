@@ -98,8 +98,6 @@ public class MainMenu implements Screen{
 		singleButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				//System.out.println("Clicked! Is checked: " + button.isChecked());
-				singleButton.setText("Starting new game");
 				g.setScreen( new gameScreen(g,false));
 			}
 		});
@@ -107,8 +105,6 @@ public class MainMenu implements Screen{
 		multiButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				//System.out.println("Clicked! Is checked: " + button.isChecked());
-				multiButton.setText("Starting new game");
 				g.setScreen( new gameScreen(g,true));
 			}
 		});
@@ -116,8 +112,6 @@ public class MainMenu implements Screen{
 		exitButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				//System.out.println("Clicked! Is checked: " + button.isChecked());
-				exitButton.setText("Closing game");
 				Gdx.app.exit();
 			}
 		});
