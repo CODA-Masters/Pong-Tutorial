@@ -49,8 +49,8 @@ public class gameScreen implements Screen{
 
 	
 	public gameScreen(final Game g, boolean multiplayer){
-		float screenWidth = 1280;
-		float screenHeight = 720;
+		float screenWidth = 800;
+		float screenHeight = 400;
 		float gameWidth = 203;
 		float gameHeight = screenHeight / (screenWidth / gameWidth);
 		
@@ -78,8 +78,8 @@ public class gameScreen implements Screen{
 	
 	// Cargar objetos del juego
 	void initObjects(){
-		player = new Player(world,ball,-9,0,0.2f,1.5f);
-		player2 = new Player(world,ball,9,0,0.2f,1.5f);
+		player = new Player(world,-9,0,0.2f,1.5f);
+		player2 = new Player(world,9,0,0.2f,1.5f);
 		posIA = player2.getBody().getPosition().y;
 		bounds = new Bounds(world);
 		ball = new Ball(world,0,0);
@@ -152,6 +152,9 @@ public class gameScreen implements Screen{
 		batch.setProjectionMatrix(camera2.combined);
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		
+		float maxTop = 3.5f;
+		float maxBot = -3.5f;
+		
 		// Si no estamos en modo multijugador, el jugador 2 se moverá de forma automática siguiendo la pelota
 		if(!multiplayer){
 			
@@ -169,13 +172,13 @@ public class gameScreen implements Screen{
 		}
 			
 		// Limitar los bordes
-		if(player2.getBody().getPosition().y > 4.05f){
-			player2.getBody().setTransform(player2.getBody().getPosition().x, 4.05f,0);
-			posIA = 4.05f;
+		if(player2.getBody().getPosition().y > maxTop){
+			player2.getBody().setTransform(player2.getBody().getPosition().x, maxTop,0);
+			posIA = maxTop;
 		}
-		else if(player2.getBody().getPosition().y < -4.1f){
-			player2.getBody().setTransform(player2.getBody().getPosition().x, -4.1f,0);
-			posIA = -4.1f;
+		else if(player2.getBody().getPosition().y < maxBot){
+			player2.getBody().setTransform(player2.getBody().getPosition().x, maxBot,0);
+			posIA = maxBot;
 		}
 		
 		// Si la pelota se pasa de la posición del jugador, marca punto el otro.

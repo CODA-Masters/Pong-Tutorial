@@ -18,16 +18,13 @@ public class Player implements ContactFilter, ContactListener {
 	
 	private Body body;
 	private Fixture fixture;
-	private Ball ball;
 	public float width, height;
 	
-	public Player(World world, Ball ball, float x, float y, float width, float height) {
+	public Player(World world, float x, float y, float width, float height) {
 		
-		this.ball = ball;
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.StaticBody;
 		bodyDef.position.set(x, y);
-		bodyDef.fixedRotation = true;
 		this.width = width;
 		this.height = height;
 		
@@ -37,9 +34,6 @@ public class Player implements ContactFilter, ContactListener {
 
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
-		fixtureDef.friction = .5f;
-		fixtureDef.restitution = 0;
-		fixtureDef.density = 2.5f;
 						
 		body = world.createBody(bodyDef);
 		fixture = body.createFixture(fixtureDef);

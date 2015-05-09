@@ -24,7 +24,8 @@ public class Bounds implements ContactFilter, ContactListener {
 		
 		BodyDef bodyDef = new BodyDef();
 		FixtureDef fixtureDef = new FixtureDef();
-		float groundPos = -2.8f;
+		float groundPos = -2.6f;
+		float topPos = 7.8f;
 		
 		// body definition
 		bodyDef.type = BodyType.StaticBody;
@@ -40,22 +41,16 @@ public class Bounds implements ContactFilter, ContactListener {
 		*/
 		
 		groundShapeBottom.createChain(new Vector2[] {new Vector2(-10, groundPos), new Vector2(10,groundPos)});
-		groundShapeTop.createChain(new Vector2[] {new Vector2(-10, 8.35f), new Vector2(10,8.35f)});
+		groundShapeTop.createChain(new Vector2[] {new Vector2(-10, topPos), new Vector2(10,topPos)});
 
 		// fixture definition
 		fixtureDef.shape = groundShapeBottom;
-		fixtureDef.friction = .5f;
-		fixtureDef.restitution = 0;
-		fixtureDef.density = 2.5f;
 
 		body = world.createBody(bodyDef);
 		fixture = body.createFixture(fixtureDef);
 		
 		// fixture definition
 		fixtureDef.shape = groundShapeTop;
-		fixtureDef.friction = .5f;
-		fixtureDef.restitution = 0;
-		fixtureDef.density = 2.5f;
 
 		body = world.createBody(bodyDef);
 		fixture = body.createFixture(fixtureDef);

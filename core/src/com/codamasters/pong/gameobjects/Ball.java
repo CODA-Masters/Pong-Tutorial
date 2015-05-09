@@ -38,7 +38,7 @@ public class Ball implements ContactFilter, ContactListener{
 		fixtureDef.shape = ballShape;
 		fixtureDef.friction = 0;
 		fixtureDef.restitution = 1;
-		fixtureDef.density = 0;
+		//fixtureDef.density = 0;
 		
 		body = world.createBody(bodyDef);
 		fixture = body.createFixture(fixtureDef);

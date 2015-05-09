@@ -68,31 +68,34 @@ public class InputHandler implements InputProcessor{
 		cam.unproject(target.set(screenX,screenY,0));
 		screen.setCamera(cam);
 		
+		float maxTop = 3.5f;
+		float maxBot = -3.5f;
+		
 		if(screen.isMultiplayer()){
 			// Modo multijugador depende del lado de la pantalla para mover los jugadores
 			
 			if(screenX < Gdx.graphics.getWidth()/2){
 				player.getBody().setTransform(player.getBody().getPosition().x, target.y,0);
-				if(player.getBody().getPosition().y > 4.05f)
-					player.getBody().setTransform(player.getBody().getPosition().x, 4.05f,0);
-				else if(player.getBody().getPosition().y < -4.1f)
-					player.getBody().setTransform(player.getBody().getPosition().x, -4.1f,0);
+				if(player.getBody().getPosition().y > maxTop)
+					player.getBody().setTransform(player.getBody().getPosition().x, maxTop,0);
+				else if(player.getBody().getPosition().y < maxBot)
+					player.getBody().setTransform(player.getBody().getPosition().x, maxBot,0);
 			}
 			
 			else{
 				player2.getBody().setTransform(player2.getBody().getPosition().x, target.y,0);
-				if(player2.getBody().getPosition().y > 4.05f)
-					player2.getBody().setTransform(player2.getBody().getPosition().x, 4.05f,0);
-				else if(player2.getBody().getPosition().y < -4.1f)
-					player2.getBody().setTransform(player2.getBody().getPosition().x, -4.1f,0);
+				if(player2.getBody().getPosition().y > maxTop)
+					player2.getBody().setTransform(player2.getBody().getPosition().x, maxTop,0);
+				else if(player2.getBody().getPosition().y < maxBot)
+					player2.getBody().setTransform(player2.getBody().getPosition().x, maxBot,0);
 			}
 		}
 		else{
 			player.getBody().setTransform(player.getBody().getPosition().x, target.y,0);
-			if(player.getBody().getPosition().y > 4.05f)
-				player.getBody().setTransform(player.getBody().getPosition().x, 4.05f,0);
-			else if(player.getBody().getPosition().y < -4.1f)
-				player.getBody().setTransform(player.getBody().getPosition().x, -4.1f,0);
+			if(player.getBody().getPosition().y > maxTop)
+				player.getBody().setTransform(player.getBody().getPosition().x, maxTop,0);
+			else if(player.getBody().getPosition().y < maxBot)
+				player.getBody().setTransform(player.getBody().getPosition().x, maxBot,0);
 		}
 			
 		return true;
