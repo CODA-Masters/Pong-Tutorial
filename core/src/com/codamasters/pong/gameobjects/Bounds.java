@@ -24,8 +24,8 @@ public class Bounds implements ContactFilter, ContactListener {
 		
 		BodyDef bodyDef = new BodyDef();
 		FixtureDef fixtureDef = new FixtureDef();
-		float groundPos = -2.6f;
-		float topPos = 7.8f;
+		float groundPos = -2.5f;
+		float topPos = 7.5f;
 		
 		// body definition
 		bodyDef.type = BodyType.StaticBody;

@@ -214,7 +214,6 @@ public class gameScreen implements Screen{
 		}
 		
 		// DIBUJAR LA ESCENA
-		
 		shapeRenderer.begin(ShapeType.Filled);
 		
 		// Dibujar jugador 1
@@ -253,7 +252,6 @@ public class gameScreen implements Screen{
 		}
 		
 		batch.end();
-		
 		
 		// Renderizador de depuración
 		//debugRenderer.render(world, camera.combined);
