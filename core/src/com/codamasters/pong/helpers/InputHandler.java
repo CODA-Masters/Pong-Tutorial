@@ -10,8 +10,6 @@ import com.codamasters.pong.screens.MainMenu;
 import com.codamasters.pong.screens.gameScreen;
 
 public class InputHandler implements InputProcessor{
-	 private float scaleFactorX;
-	 private float scaleFactorY;
 	 private Player player, player2;
 	 private gameScreen screen;
 	 private Vector3 target;
@@ -19,8 +17,6 @@ public class InputHandler implements InputProcessor{
 	 
 	 
 	 public InputHandler(final Game g, gameScreen screen, float scaleFactorX, float scaleFactorY){
-		 this.scaleFactorX = scaleFactorX;
-	     this.scaleFactorY = scaleFactorY;
 	     this.screen = screen;
 	     this.target = new Vector3();
 	     target.set(-10,0,0);
