@@ -46,6 +46,7 @@ public class gameScreen implements Screen{
 	private int scored;
 	private GlyphLayout layout;
 	private boolean end;
+	private float force;
 
 	
 	public gameScreen(final Game g, boolean multiplayer){
@@ -64,6 +65,7 @@ public class gameScreen implements Screen{
 		
 		this.multiplayer = multiplayer;
 		angle = 0;
+		force = 800;
 		scoreP1 = 0;
 		scoreP2 = 0;
 		scored = 0;
@@ -84,7 +86,7 @@ public class gameScreen implements Screen{
 		bounds = new Bounds(world);
 		ball = new Ball(world,0,0);
 		ball.getBody().applyForce(-800f,100f,0,0,true);
-		module = Math.sqrt(800f*800f + 100f*100f);
+		module = Math.sqrt(force*force + 100f*100f);
 	}
 	
 	// Cargar contenido audiovisual
@@ -122,12 +124,13 @@ public class gameScreen implements Screen{
 	
 	// Reinicio del juego al marcar puntos
 	public void restartGame(){
+		force = 800;
 		switch(scored){
 		case 1:
-			ball.getBody().applyForce(-800f,100f,0,0,true);
+			ball.getBody().applyForce(-force,100f,0,0,true);
 			break;
 		case 2:
-			ball.getBody().applyForce(800f,100f,0,0,true);
+			ball.getBody().applyForce(force,100f,0,0,true);
 			break;
 		}
 		scored = 0;
@@ -163,9 +166,9 @@ public class gameScreen implements Screen{
 			if(ball.getBody().getPosition().y-0.085f > player2.getBody().getPosition().y || ball.getBody().getPosition().y+0.085f < player2.getBody().getPosition().y){
 			
 				if(ball.getBody().getPosition().y > player2.getBody().getPosition().y)
-					posIA += 0.085f;
+					posIA += 0.13f;
 				else
-					posIA -= 0.085f;
+					posIA -= 0.13f;
 			}
 			
 			player2.getBody().setTransform(player2.getBody().getPosition().x, posIA,0);
@@ -203,6 +206,8 @@ public class gameScreen implements Screen{
 		// Aplicar fuerza a la pelota dependiendo de en qué posición se encuentre respecto al palote
 		if(angle != 0){
 			ball.getBody().setLinearVelocity(0,0);
+			force += 50f;
+			module = Math.sqrt(force*force + 100f*100f);
 			ball.getBody().applyForceToCenter((float)(module*Math.cos(angle)),(float)(module*Math.sin(angle)), true);
 			angle = 0;
 			AssetsLoader.pong.play();
