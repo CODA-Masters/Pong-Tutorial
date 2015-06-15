@@ -37,6 +37,4 @@ En configuración avanzada activar Eclipse:
 
 4. Pulsamos en generate y se nos creará el proyecto en la carpeta seleccionada
 5. Descargamos el proyecto de nuestro repositorio (usando git clone)
-6. Sustituir las carpetas dentro de core, introducir las carpetas android/assets/data, y desktop/data de nuestro proyecto en el proyecto que hemos creado
-7. Tener en cuenta que hace falta importar las librerias de TweenEngine (están en nuestro proyecto metidas en core/libs)
-8. Hay que tener en cuenta que para compilar debemos alterar el orden haciendo que TweenEngine quede por encima de LibGdx
+6. Sustituir las carpetas dentro de core, introducir las carpetas android/assets/ de nuestro proyecto en el proyecto que hemos creado
