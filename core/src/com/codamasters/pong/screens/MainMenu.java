@@ -13,15 +13,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.codamasters.pong.helpers.AssetsLoader;
 
 public class MainMenu implements Screen{
@@ -29,8 +26,8 @@ public class MainMenu implements Screen{
 	private Skin skin;
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
-	
-	
+	private static boolean sound = true;
+
 	public MainMenu(final Game g){
 		AssetsLoader.load();
 		stage = new Stage(new FitViewport(800,400));
@@ -82,17 +79,21 @@ public class MainMenu implements Screen{
 		labelStyle.font = skin.getFont("arcade");
  
 		// Create a button with the "default" TextButtonStyle. A 3rd parameter can be used to specify a name other than "default".
-		final TextButton singleButton=new TextButton("SINGLE PLAYER",textButtonStyle);
-		singleButton.setBounds(450, 250, 250, 80);
+		final TextButton singleButton=new TextButton("1  PLAYER",textButtonStyle);
+		singleButton.setBounds(450, 300, 250, 80);
 		
-		final TextButton multiButton=new TextButton("MULTIPLAYER",textButtonStyle);
-		multiButton.setBounds(450, 150, 250, 80);
+		final TextButton multiButton=new TextButton("2  PLAYERS",textButtonStyle);
+		multiButton.setBounds(450, 200, 250, 80);
+
+		final TextButton wallButton=new TextButton("WALL  MODE",textButtonStyle);
+		wallButton.setBounds(450, 100, 250, 80);
 		
-		final TextButton exitButton=new TextButton("EXIT",exitButtonStyle);
-		exitButton.setBounds(450, 50, 250, 80);
+		final TextButton exitButton=	new TextButton("EXIT",exitButtonStyle);
+		exitButton.setBounds(450, 0, 250, 80);
 		
 		stage.addActor(singleButton);
 		stage.addActor(multiButton);
+		stage.addActor(wallButton);
 		stage.addActor(exitButton);
 		
 		singleButton.addListener(new ChangeListener() {
@@ -106,6 +107,13 @@ public class MainMenu implements Screen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				g.setScreen( new gameScreen(g,true));
+			}
+		});
+
+		wallButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				g.setScreen( new gameWallScreen(g,false));
 			}
 		});
 		
