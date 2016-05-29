@@ -2,9 +2,16 @@ package com.codamasters.pong;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
+import com.codamasters.pong.helpers.ActionResolver;
 import com.codamasters.pong.screens.MainMenu;
 
 public class Pong extends Game implements ApplicationListener {
+
+	public static ActionResolver actionResolver;
+
+	public Pong(ActionResolver actionResolver){
+		this.actionResolver = actionResolver;
+	}
 	
 	@Override
 	public void create () {

@@ -1,11 +1,11 @@
 package com.codamasters.pong.helpers;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
+import com.codamasters.pong.Pong;
 import com.codamasters.pong.gameobjects.Player;
 import com.codamasters.pong.screens.MainMenu;
 import com.codamasters.pong.screens.gameWallScreen;
@@ -14,10 +14,10 @@ public class InputHandlerWall implements InputProcessor{
 	 private Player player, player2;
 	 private gameWallScreen screen;
 	 private Vector3 target;
-	 private Game game;
+	 private Pong game;
 
 
-	 public InputHandlerWall(final Game g, gameWallScreen screen, float scaleFactorX, float scaleFactorY){
+	 public InputHandlerWall(final Pong g, gameWallScreen screen, float scaleFactorX, float scaleFactorY){
 	     this.screen = screen;
 	     this.target = new Vector3();
 	     target.set(-10,0,0);

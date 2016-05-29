@@ -1,7 +1,7 @@
 package com.codamasters.pong.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -11,14 +11,18 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.codamasters.pong.Pong;
 import com.codamasters.pong.helpers.AssetsLoader;
 
 public class MainMenu implements Screen{
@@ -26,9 +30,11 @@ public class MainMenu implements Screen{
 	private Skin skin;
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
-	private static boolean sound = true;
+    private Preferences preferences;
 
-	public MainMenu(final Game g){
+
+    public MainMenu(final Pong g){
+
 		AssetsLoader.load();
 		stage = new Stage(new FitViewport(800,400));
 		camera = new OrthographicCamera(stage.getWidth()/3,stage.getHeight()/3);
@@ -80,22 +86,27 @@ public class MainMenu implements Screen{
  
 		// Create a button with the "default" TextButtonStyle. A 3rd parameter can be used to specify a name other than "default".
 		final TextButton singleButton=new TextButton("1  PLAYER",textButtonStyle);
-		singleButton.setBounds(450, 300, 250, 80);
+		singleButton.setBounds(450, 310, 250, 80);
 		
 		final TextButton multiButton=new TextButton("2  PLAYERS",textButtonStyle);
-		multiButton.setBounds(450, 200, 250, 80);
+		multiButton.setBounds(450, 210, 250, 80);
 
 		final TextButton wallButton=new TextButton("WALL  MODE",textButtonStyle);
-		wallButton.setBounds(450, 100, 250, 80);
+		wallButton.setBounds(450, 110, 250, 80);
 		
 		final TextButton exitButton=	new TextButton("EXIT",exitButtonStyle);
-		exitButton.setBounds(450, 0, 250, 80);
-		
+		exitButton.setBounds(450, 10, 250, 80);
+
+		final ImageButton rankingButtonWallMode =new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("trophy.png")))));
+        rankingButtonWallMode.setBounds(720, 110, 50, 80);
+
 		stage.addActor(singleButton);
 		stage.addActor(multiButton);
 		stage.addActor(wallButton);
 		stage.addActor(exitButton);
-		
+		stage.addActor(rankingButtonWallMode);
+
+
 		singleButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -122,6 +133,17 @@ public class MainMenu implements Screen{
 			public void changed(ChangeEvent event, Actor actor) {
 				Gdx.app.exit();
 			}
+		});
+
+		rankingButtonWallMode.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+
+                preferences = Gdx.app.getPreferences("pong");
+                g.actionResolver.submitScoreWallMode(preferences.getInteger("highscore", 0));
+                g.actionResolver.displayLeaderboardWallMode();
+
+            }
 		});
 	}
 

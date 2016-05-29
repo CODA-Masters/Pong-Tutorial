@@ -1,6 +1,5 @@
 package com.codamasters.pong.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
@@ -18,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
+import com.codamasters.pong.Pong;
 import com.codamasters.pong.gameobjects.Ball;
 import com.codamasters.pong.gameobjects.Bounds;
 import com.codamasters.pong.gameobjects.Player;
@@ -48,7 +48,7 @@ public class gameWallScreen implements Screen{
     private boolean new_highscore = false;
 
 
-	public gameWallScreen(final Game g, boolean multiplayer){
+	public gameWallScreen(final Pong g, boolean multiplayer){
 		float screenWidth = 800;
 		float screenHeight = 400;
 		float gameWidth = 203;
