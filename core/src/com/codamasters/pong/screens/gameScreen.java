@@ -208,7 +208,8 @@ public class gameScreen implements Screen{
 			module = Math.sqrt(force*force + 100f*100f);
 			ball.getBody().applyForceToCenter((float)(module*Math.cos(angle)),(float)(module*Math.sin(angle)), true);
 			angle = 0;
-			AssetsLoader.pong.play();
+			if(MainMenu.getSound())
+				AssetsLoader.pong.play();
 		}
 	
 		// Cuando algún jugador marca 10 puntos (a diferencia de 2) termina la partida

@@ -31,7 +31,7 @@ public class MainMenu implements Screen{
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
     private Preferences preferences;
-
+	public static boolean sound;
 
     public MainMenu(final Pong g){
 
@@ -43,8 +43,10 @@ public class MainMenu implements Screen{
 		// A skin can be loaded via JSON or defined programmatically, either is fine. Using a skin is optional but strongly
 		// recommended solely for the convenience of getting a texture, region, etc as a drawable, tinted drawable, etc.
 		skin = new Skin();
-		
-		Gdx.input.setInputProcessor(stage);
+        preferences = Gdx.app.getPreferences("pong");
+
+
+        Gdx.input.setInputProcessor(stage);
 		
 		// Generate a 1x1 white texture and store it in the skin named "white".
 		Pixmap pixmap = new Pixmap(100, 100, Format.RGBA8888);
@@ -100,11 +102,25 @@ public class MainMenu implements Screen{
 		final ImageButton rankingButtonWallMode =new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("trophy.png")))));
         rankingButtonWallMode.setBounds(720, 110, 50, 80);
 
+		final ImageButton soundButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("sound_on.png")))),null,  new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("sound_off.png")))));
+
+        sound = preferences.getBoolean("sound", true);
+        if(sound){
+            soundButton.setChecked(false);
+        }else{
+            soundButton.setChecked(true);
+        }
+
+		soundButton.setBounds(50, 330, 50, 50);
+
+
 		stage.addActor(singleButton);
 		stage.addActor(multiButton);
 		stage.addActor(wallButton);
 		stage.addActor(exitButton);
 		stage.addActor(rankingButtonWallMode);
+		stage.addActor(soundButton);
+
 
 
 		singleButton.addListener(new ChangeListener() {
@@ -118,6 +134,7 @@ public class MainMenu implements Screen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				g.setScreen( new gameScreen(g,true));
+
 			}
 		});
 
@@ -139,12 +156,24 @@ public class MainMenu implements Screen{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 
-                preferences = Gdx.app.getPreferences("pong");
                 g.actionResolver.submitScoreWallMode(preferences.getInteger("highscore", 0));
                 g.actionResolver.displayLeaderboardWallMode();
-
             }
 		});
+
+        soundButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if(sound){
+                    sound = false;
+                }else{
+                    sound=true;
+                }
+                preferences.putBoolean("sound", sound);
+                preferences.flush();
+            }
+        });
+
 	}
 
 	@Override
@@ -199,6 +228,10 @@ public class MainMenu implements Screen{
 		stage.dispose();
 		skin.dispose();
 		
+	}
+
+	public static boolean getSound(){
+		return sound;
 	}
 
 }

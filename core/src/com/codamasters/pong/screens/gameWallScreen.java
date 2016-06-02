@@ -164,7 +164,9 @@ public class gameWallScreen implements Screen{
 			module = Math.sqrt(force*force + 100f*100f);
 			ball.getBody().applyForceToCenter((float)(module*Math.cos(angle)),(float)(module*Math.sin(angle)), true);
 			angle = 0;
-			AssetsLoader.pong.play();
+
+			if(MainMenu.getSound())
+				AssetsLoader.pong.play();
 		}
 
 		// DIBUJAR LA ESCENA
