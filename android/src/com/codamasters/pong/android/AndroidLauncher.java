@@ -1,5 +1,6 @@
 package com.codamasters.pong.android;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import com.codamasters.pong.Pong;
 import com.codamasters.pong.R;
 import com.codamasters.pong.helpers.ActionResolver;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.GamesActivityResultCodes;
 import com.google.android.gms.games.GamesStatusCodes;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessage;
 import com.google.android.gms.games.multiplayer.realtime.RealTimeMessageReceivedListener;
@@ -22,6 +24,7 @@ import com.google.android.gms.games.multiplayer.realtime.RoomStatusUpdateListene
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 import com.google.example.games.basegameutils.GameHelper;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 
 public class AndroidLauncher extends AndroidApplication implements ActionResolver, RoomUpdateListener, RealTimeMessageReceivedListener, RoomStatusUpdateListener{
@@ -29,14 +32,17 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
     private GameHelper gameHelper;
     private final static int requestCode = 1;
     final static int RC_WAITING_ROOM = 10002;
-
+    private String mRoomId;
+    private Pong pong;
+    private boolean side;
 
 
     @Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new Pong(this), config);
+        pong = new Pong(this);
+		initialize(pong, config);
 
         gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
         gameHelper.enableDebugLog(true);
@@ -61,10 +67,31 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        gameHelper.onActivityResult(requestCode, resultCode, data);
+    public void onActivityResult(int request, int response, Intent intent) {
+        if (request == RC_WAITING_ROOM) {
+            if (response == Activity.RESULT_OK) {
+                pong.startOnlineGame();
+            }
+            else if (response == Activity.RESULT_CANCELED) {
+                // Waiting room was dismissed with the back button. The meaning of this
+                // action is up to the game. You may choose to leave the room and cancel the
+                // match, or do something else like minimize the waiting room and
+                // continue to connect in the background.
 
+                // in this example, we take the simple approach and just leave the room:
+                Games.RealTimeMultiplayer.leave(gameHelper.getApiClient(), this, mRoomId);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
+            else if (response == GamesActivityResultCodes.RESULT_LEFT_ROOM) {
+                // player wants to leave the room.
+                Games.RealTimeMultiplayer.leave(gameHelper.getApiClient(), this, mRoomId);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
+        }
+        else{
+            super.onActivityResult(requestCode, response, intent);
+            gameHelper.onActivityResult(requestCode, response, intent);
+        }
     }
 
     @Override
@@ -172,9 +199,12 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
     @Override
     public void onJoinedRoom(int statusCode, Room room) {
         if (statusCode != GamesStatusCodes.STATUS_OK) {
-            Toast.makeText(getApplicationContext(), "ERROR JOIN ROOM", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Error joining room. Error Code : ", Toast.LENGTH_SHORT).show();
             return;
         }
+        mRoomId = room.getRoomId();
+        Toast.makeText(getApplicationContext(), "SOY UNIDOR ", Toast.LENGTH_SHORT).show();
+
 
         // get waiting room intent
         Intent i = Games.RealTimeMultiplayer.getWaitingRoomIntent(gameHelper.getApiClient(), room, Integer.MAX_VALUE);
@@ -184,9 +214,13 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
     @Override
     public void onRoomCreated(int statusCode, Room room) {
         if (statusCode != GamesStatusCodes.STATUS_OK) {
-            Toast.makeText(getApplicationContext(), "ERROR CREATING ROOM. CODE : " + String.valueOf(statusCode), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Error creating room. Error Code : " + String.valueOf(statusCode), Toast.LENGTH_SHORT).show();
             return;
         }
+
+        mRoomId = room.getRoomId();
+        Toast.makeText(getApplicationContext(), "SOY CREADOR ", Toast.LENGTH_SHORT).show();
+
 
         // get waiting room intent
         Intent i = Games.RealTimeMultiplayer.getWaitingRoomIntent(gameHelper.getApiClient(), room, Integer.MAX_VALUE);
@@ -204,8 +238,22 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
     }
 
     @Override
-    public void onRealTimeMessageReceived(RealTimeMessage realTimeMessage) {
+    public void sendPos(float y){
+        try{
+            byte[] mensaje;
+            mensaje = ByteBuffer.allocate(4).putFloat(y).array();
+            Games.RealTimeMultiplayer.sendUnreliableMessageToOthers(gameHelper.getApiClient(), mensaje, mRoomId);
+        }catch(Exception e){
+        }
+    }
 
+    @Override
+    public void onRealTimeMessageReceived(RealTimeMessage rtm) {
+        float y;
+        byte[] b = rtm.getMessageData();
+        ByteBuffer bf = ByteBuffer.wrap(b);
+        y = bf.getFloat();
+        pong.getOnlineGame().updateGame(y);
     }
 
     @Override

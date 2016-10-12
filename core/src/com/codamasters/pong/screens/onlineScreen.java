@@ -47,16 +47,14 @@ public class onlineScreen implements Screen{
 	//Online
 
     private Pong game;
-    private onlineStartScreen prevScreen;
     private final int PUNTUACION = 5;
     private Integer side=null;
     private boolean started = false;
 
-	public onlineScreen(Pong game, onlineStartScreen prevScreen, int init_side){
+	public onlineScreen(Pong game, int init_side){
 
 
         this.game = game;
-        this.prevScreen = prevScreen;
 
 		float screenWidth = 800;
 		float screenHeight = 400;
@@ -318,27 +316,18 @@ public class onlineScreen implements Screen{
 		debugRenderer.dispose();
 		shapeRenderer.dispose();
 		batch.dispose();
-		
 	}
 
-    public void onGameFinished(int code, boolean isRemote) {
-        if(isRemote){
-            prevScreen.onGameFinished(code, true);
-        }
-        //WarpController.getInstance().handleLeave();
-    }
-
-	/*
-    public void onGameUpdateReceived (String message) {
+    public void updateGame(float y) {
         try {
-            JSONObject data = new JSONObject(message);
-            float y = (float)data.getDouble("y");
-            int restart = data.getInt("restart");
+            //int restart = data.getInt("restart");
+			int restart = 0;
             if( restart == 0){
                 side = 1;
             }else if(restart == 1){
                 side = 0;
             }
+
             else if(restart == 2)
                 player2.getBody().setTransform(player2.getBody().getPosition().x, y, 0);
             else if(restart == 3)
@@ -357,10 +346,7 @@ public class onlineScreen implements Screen{
         } catch (Exception e) {
             // exception in onMoveNotificationReceived
         }
-
-
     }
-    */
 
 
 }

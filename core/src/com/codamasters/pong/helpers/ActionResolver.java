@@ -12,5 +12,6 @@ public interface ActionResolver {
     public void rateGame();
     public boolean isSignedIn();
     public void startQuickGame();
+    public void sendPos(float y);
 
 }

@@ -45,7 +45,7 @@ public class InputOnlineHandler implements InputProcessor{
 
 		if(screen.isScored() != 0 && !screen.isEnded()){
 			screen.restartGame();
-			sendLocation(0, 3);
+			game.actionResolver.sendPos(0);
 		}
 		
 		if(screen.isEnded()){
@@ -75,7 +75,7 @@ public class InputOnlineHandler implements InputProcessor{
 			value = maxBot;
 		}
 
-		sendLocation(value, 2);
+		game.actionResolver.sendPos(value);
 		player.getBody().setTransform(player.getBody().getPosition().x, value,0);
 
 		return true;
@@ -91,7 +91,4 @@ public class InputOnlineHandler implements InputProcessor{
 		return false;
 	}
 
-	private void sendLocation(float y, int state){
-
-	}
 }

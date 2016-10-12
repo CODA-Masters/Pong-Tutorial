@@ -4,10 +4,12 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.codamasters.pong.helpers.ActionResolver;
 import com.codamasters.pong.screens.MainMenu;
+import com.codamasters.pong.screens.onlineScreen;
 
 public class Pong extends Game implements ApplicationListener {
 
 	public static ActionResolver actionResolver;
+	private onlineScreen onlineScreen;
 
 	public Pong(ActionResolver actionResolver){
 		this.actionResolver = actionResolver;
@@ -41,5 +43,14 @@ public class Pong extends Game implements ApplicationListener {
 	@Override
 	public void resume() {
 		super.resume();
+	}
+
+	public void startOnlineGame(){
+		onlineScreen = new onlineScreen(this, 0);
+		setScreen(onlineScreen);
+	}
+
+	public onlineScreen getOnlineGame(){
+		return onlineScreen;
 	}
 }
