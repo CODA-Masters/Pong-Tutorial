@@ -47,13 +47,17 @@ public class onlineScreen implements Screen{
 	//Online
 
     private Pong game;
+    private onlineStartScreen prevScreen;
     private final int PUNTUACION = 5;
     private Integer side=null;
     private boolean started = false;
 
-	public onlineScreen(Pong game, int init_side){
+	public onlineScreen(Pong game, onlineStartScreen prevScreen, int init_side){
+
 
         this.game = game;
+        this.prevScreen = prevScreen;
+
 		float screenWidth = 800;
 		float screenHeight = 400;
 		float gameWidth = 203;
@@ -316,7 +320,14 @@ public class onlineScreen implements Screen{
 		batch.dispose();
 		
 	}
-	
+
+    public void onGameFinished(int code, boolean isRemote) {
+        if(isRemote){
+            prevScreen.onGameFinished(code, true);
+        }
+        //WarpController.getInstance().handleLeave();
+    }
+
 	/*
     public void onGameUpdateReceived (String message) {
         try {
@@ -346,6 +357,8 @@ public class onlineScreen implements Screen{
         } catch (Exception e) {
             // exception in onMoveNotificationReceived
         }
+
+
     }
     */
 

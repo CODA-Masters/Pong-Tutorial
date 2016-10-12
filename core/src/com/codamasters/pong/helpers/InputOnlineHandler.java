@@ -16,7 +16,6 @@ public class InputOnlineHandler implements InputProcessor{
 	 private float maxTop = 3.5f;
 	 private float maxBot = -3.5f;
 
-
 	 public InputOnlineHandler(final Pong g, onlineScreen screen, float scaleFactorX, float scaleFactorY){
 	     this.screen = screen;
 	     this.target = new Vector3();
