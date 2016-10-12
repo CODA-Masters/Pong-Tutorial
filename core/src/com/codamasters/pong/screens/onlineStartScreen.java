@@ -82,6 +82,9 @@ public class onlineStartScreen implements Screen {
         Random rnd = new Random();
         side = rnd.nextBoolean();
 
+		game.actionResolver.startQuickGame();
+		//startGame();
+
 	}
 
 	void initObjects(){
@@ -179,7 +182,7 @@ public class onlineStartScreen implements Screen {
 		update();
     }
 
-    public void onGameStarted(String message) {
+    public void startGame() {
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
@@ -220,5 +223,5 @@ public class onlineStartScreen implements Screen {
     public boolean isEnded(){
         return end;
     }
-	
+
 }
