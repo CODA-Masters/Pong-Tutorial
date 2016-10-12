@@ -207,7 +207,7 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
 
 
         // get waiting room intent
-        Intent i = Games.RealTimeMultiplayer.getWaitingRoomIntent(gameHelper.getApiClient(), room, Integer.MAX_VALUE);
+        Intent i = Games.RealTimeMultiplayer.getWaitingRoomIntent(gameHelper.getApiClient(), room, 2);
         startActivityForResult(i, RC_WAITING_ROOM);
     }
 
@@ -223,7 +223,7 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
 
 
         // get waiting room intent
-        Intent i = Games.RealTimeMultiplayer.getWaitingRoomIntent(gameHelper.getApiClient(), room, Integer.MAX_VALUE);
+        Intent i = Games.RealTimeMultiplayer.getWaitingRoomIntent(gameHelper.getApiClient(), room, 2);
         startActivityForResult(i, RC_WAITING_ROOM);
     }
 
@@ -234,6 +234,7 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
 
     @Override
     public void onRoomConnected(int i, Room room) {
+
 
     }
 
