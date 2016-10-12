@@ -39,7 +39,6 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
         };
 
         gameHelper.setup(gameHelperListener);
-
     }
 
 
