@@ -46,12 +46,12 @@ public class Pong extends Game implements ApplicationListener {
 		super.resume();
 	}
 
-	public void startOnlineGame(){
+	public void startOnlineGame(final int side){
 		final Pong pong = this;
 		Gdx.app.postRunnable(new Runnable() {
 							 @Override
 							 public void run() {
-								 onlineScreen = new onlineScreen(pong, 0);
+								 onlineScreen = new onlineScreen(pong, side);
 								 setScreen(onlineScreen);
 							 }
 					 }

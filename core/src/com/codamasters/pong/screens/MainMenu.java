@@ -127,7 +127,6 @@ public class MainMenu implements Screen{
 
 		handButton.setBounds(50, 20, 50, 50);
 
-
 		stage.addActor(singleButton);
 		stage.addActor(multiButton);
 		stage.addActor(wallButton);
@@ -135,8 +134,6 @@ public class MainMenu implements Screen{
 		stage.addActor(rankingButtonWallMode);
 		stage.addActor(soundButton);
 		stage.addActor(handButton);
-
-
 
 		singleButton.addListener(new ChangeListener() {
 			@Override
@@ -148,8 +145,8 @@ public class MainMenu implements Screen{
 		multiButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				g.setScreen( new gameScreen(g,true));
-				//g.actionResolver.startQuickGame();
+				//g.setScreen( new gameScreen(g,true));
+				g.actionResolver.startQuickGame();
 
 			}
 		});

@@ -25,6 +25,7 @@ import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 import com.google.example.games.basegameutils.GameHelper;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AndroidLauncher extends AndroidApplication implements ActionResolver, RoomUpdateListener, RealTimeMessageReceivedListener, RoomStatusUpdateListener{
@@ -34,6 +35,9 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
     final static int RC_WAITING_ROOM = 10002;
     private String mRoomId;
     private Pong pong;
+
+    private String creatorID;
+    private String myID;
 
     @Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -69,7 +73,18 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
 
         if (request == RC_WAITING_ROOM) {
             if (response == Activity.RESULT_OK) {
-                pong.startOnlineGame();
+
+                int side;
+                if(creatorID.equals(myID)){
+                    side = 0;
+                    Toast.makeText(this, "YO EMPIEZO", Toast.LENGTH_SHORT).show();
+                }else{
+                    side = 1;
+                    Toast.makeText(this, "TU EMPIEZAS", Toast.LENGTH_SHORT).show();
+                }
+
+
+                pong.startOnlineGame(side);
             }
             else if (response == Activity.RESULT_CANCELED) {
                 // Waiting room was dismissed with the back button. The meaning of this
@@ -233,6 +248,13 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
     public void onRoomConnected(int i, Room room) {
         // Todos los usuarios están conectados
         mRoomId = room.getRoomId();
+
+
+        // Calculamos quien va empezar
+
+        ArrayList<String> parcitipants = room.getParticipantIds();
+        creatorID = parcitipants.get(0);
+        myID = room.getParticipantId(Games.Players.getCurrentPlayerId(gameHelper.getApiClient()));
 
     }
 
