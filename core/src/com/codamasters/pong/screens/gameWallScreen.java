@@ -46,6 +46,7 @@ public class gameWallScreen implements Screen{
     private Preferences preferences;
     private int highscore;
     private boolean new_highscore = false;
+	private boolean hand;
 
 
 	public gameWallScreen(final Pong g, boolean multiplayer){
@@ -70,25 +71,37 @@ public class gameWallScreen implements Screen{
 		score = 0;
 		scored = 0;
 		end = false;
-		
+
+		preferences = Gdx.app.getPreferences("pong");
+		highscore = preferences.getInteger("highscore", 0);
+
 		initObjects();
 		initAssets();
 		
 		Gdx.input.setInputProcessor(new InputHandlerWall(g, this, gameWidth/10, gameHeight/10));
 		createCollisionListener();
-
-        preferences = Gdx.app.getPreferences("pong");
-        highscore = preferences.getInteger("highscore", 0);
-
     }
 	
 	// Cargar objetos del juego
 	void initObjects(){
-		player = new Player(world,-9,0,0.2f,1.5f);
-		player2 = new Player(world,10,0,0.2f,20f);
+		hand = preferences.getBoolean("hand", true);
+
+		if(!hand){
+			player = new Player(world,-9,0,0.2f,1.5f);
+			player2 = new Player(world,10,0,0.2f,20f);
+		}else{
+			player = new Player(world,9,0,0.2f,1.5f);
+			player2 = new Player(world,-10,0,0.2f,20f);
+		}
+
 		bounds = new Bounds(world);
 		ball = new Ball(world,0,0);
-		ball.getBody().applyForce(-800f,100f,0,0,true);
+
+		if(!hand)
+			ball.getBody().applyForce(-800f,100f,0,0,true);
+		else
+			ball.getBody().applyForce(800f,100f,0,0,true);
+
 		module = Math.sqrt(force*force + 100f*100f);
 	}
 	
@@ -117,7 +130,6 @@ public class gameWallScreen implements Screen{
 		return end;
 	}
 
-
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub
@@ -142,19 +154,32 @@ public class gameWallScreen implements Screen{
 		
 
 		// Si la pelota se pasa de la posición del jugador 1 acaba la partida
-		
-		if(ball.getBody().getPosition().x+2 < player.getBody().getPosition().x && scored == 0){
-			end = true;
 
-            if(score > highscore) {
-                preferences.putInteger("highscore", score);
-                preferences.flush();
+		if(!hand) {
+			if (ball.getBody().getPosition().x + 2 < player.getBody().getPosition().x && scored == 0) {
+				end = true;
 
-                highscore = score;
-                new_highscore = true;
-            }
+				if (score > highscore) {
+					preferences.putInteger("highscore", score);
+					preferences.flush();
+
+					highscore = score;
+					new_highscore = true;
+				}
+			}
+		}else{
+			if(ball.getBody().getPosition().x - 2 > player.getBody().getPosition().x && scored == 0){
+				end = true;
+
+				if (score > highscore) {
+					preferences.putInteger("highscore", score);
+					preferences.flush();
+
+					highscore = score;
+					new_highscore = true;
+				}
+			}
 		}
-
 
 
 		// Aplicar fuerza a la pelota dependiendo de en qué posición se encuentre respecto al palote
@@ -221,19 +246,26 @@ public class gameWallScreen implements Screen{
 			public void beginContact(Contact contact) {
 				Fixture fixtureA = contact.getFixtureA();
 				Fixture fixtureB = contact.getFixtureB();
-				
-				if(fixtureA == player.getFixture() && fixtureB == ball.getFixture()){
-					float diff = ball.getBody().getPosition().y - player.getBody().getPosition().y;
-					
-					angle = (diff/player.height * 45)/360 * 2*Math.PI;
-					
+
+				if(!hand) {
+					if (fixtureA == player.getFixture() && fixtureB == ball.getFixture()) {
+						float diff = ball.getBody().getPosition().y - player.getBody().getPosition().y;
+
+						angle = (diff / player.height * 45) / 360 * 2 * Math.PI;
+
+					}
+				}else{
+					if (fixtureA == player2.getFixture() && fixtureB == ball.getFixture()) {
+						float diff = ball.getBody().getPosition().y - player2.getBody().getPosition().y;
+
+						angle = (diff / player2.height * 45) / 360 * 2 * Math.PI;
+
+					}
 				}
 
-				if(fixtureA == player2.getFixture() && fixtureB == ball.getFixture()){
-                    score+=1;
-                }
-
-				
+				if (fixtureA == player.getFixture() && fixtureB == ball.getFixture()) {
+					score += 1;
+				}
 			}
 
 			@Override

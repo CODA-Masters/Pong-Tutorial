@@ -1,5 +1,6 @@
 package com.codamasters.pong.helpers;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -24,6 +25,8 @@ public class InputOnlineHandler implements InputProcessor{
 	     player = screen.getPlayer();
 	     player2 = screen.getPlayer2();
 	     game = g;
+		 Gdx.input.setCatchBackKey(true);
+
 	 }
 
 	@Override
@@ -53,7 +56,7 @@ public class InputOnlineHandler implements InputProcessor{
 
 		if(screen.isScored() != 0 && !screen.isEnded()){
 			screen.restartGame();
-			game.actionResolver.sendPos(0, 0);
+			game.actionResolver.sendPos(0, 3);
 		}
 		
 		if(screen.isEnded()){

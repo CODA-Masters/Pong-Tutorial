@@ -118,7 +118,7 @@ public class MainMenu implements Screen{
 		// Manoplas
 		final ImageButton handButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("left-hand.png")))),null,  new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("right-hand.png")))));
 
-		hand = preferences.getBoolean("hand", true);
+		hand = preferences.getBoolean("hand", false);
 		if(hand){
 			handButton.setChecked(true);
 		}else{
