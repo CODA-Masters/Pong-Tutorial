@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -34,14 +33,7 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
     private final static int requestCode = 1;
     final static int RC_WAITING_ROOM = 10002;
     private String mRoomId;
-    private String ownRoomId;
     private Pong pong;
-    private boolean side;
-
-
-    private String myID;
-    private String creatorID;
-
 
     @Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -77,15 +69,6 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
 
         if (request == RC_WAITING_ROOM) {
             if (response == Activity.RESULT_OK) {
-
-                if(myID.equals(creatorID)){
-                    Log.d("SALA", "PROPIA");
-                    Toast.makeText(this, "Misma sala", Toast.LENGTH_SHORT).show();
-                }else{
-                    Log.d("SALA", "OTRA");
-                    Toast.makeText(this, "Otra sala", Toast.LENGTH_SHORT).show();
-                }
-
                 pong.startOnlineGame();
             }
             else if (response == Activity.RESULT_CANCELED) {
@@ -235,8 +218,6 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
         }
 
         mRoomId = room.getRoomId();
-        ownRoomId = room.getRoomId();
-        myID = room.getCreatorId();
 
         // get waiting room intent
         Intent i = Games.RealTimeMultiplayer.getWaitingRoomIntent(gameHelper.getApiClient(), room, 2);
@@ -252,7 +233,7 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
     public void onRoomConnected(int i, Room room) {
         // Todos los usuarios están conectados
         mRoomId = room.getRoomId();
-        creatorID = room.getCreatorId();
+
     }
 
     @Override
