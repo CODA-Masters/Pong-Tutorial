@@ -184,31 +184,46 @@ public class gameScreen implements Screen{
 		}
 			
 		// Limitar los bordes
-		if(player2.getBody().getPosition().y > maxTop){
-			player2.getBody().setTransform(player2.getBody().getPosition().x, maxTop,0);
+		if (player2.getBody().getPosition().y > maxTop) {
+			player2.getBody().setTransform(player2.getBody().getPosition().x, maxTop, 0);
 			posIA = maxTop;
-		}
-		else if(player2.getBody().getPosition().y < maxBot){
-			player2.getBody().setTransform(player2.getBody().getPosition().x, maxBot,0);
+		} else if (player2.getBody().getPosition().y < maxBot) {
+			player2.getBody().setTransform(player2.getBody().getPosition().x, maxBot, 0);
 			posIA = maxBot;
 		}
 		
 		// Si la pelota se pasa de la posición del jugador, marca punto el otro.
-		
-		if(ball.getBody().getPosition().x+2 < player.getBody().getPosition().x && scored == 0){
-			scoreP2+=1;
-			scored = 2;
+
+		if(!hand) {
+			if (ball.getBody().getPosition().x + 2 < player.getBody().getPosition().x && scored == 0) {
+				scoreP2 += 1;
+				scored = 2;
+			} else if (ball.getBody().getPosition().x - 2 > player2.getBody().getPosition().x && scored == 0) {
+				scoreP1 += 1;
+				scored = 1;
+			}
 		}
-		else if (ball.getBody().getPosition().x-2 > player2.getBody().getPosition().x && scored == 0){
-			scoreP1+=1;
-			scored = 1;
+		else{
+			if (ball.getBody().getPosition().x + 2 < player2.getBody().getPosition().x && scored == 0) {
+				scoreP2 += 1;
+				scored = 2;
+			} else if (ball.getBody().getPosition().x - 2 > player.getBody().getPosition().x && scored == 0) {
+				scoreP1 += 1;
+				scored = 1;
+			}
 		}
 		
 		// Reseteamos la escena a sus valores originales cuando se marca un punto
 		if (scored != 0){
 			ball.getBody().setTransform(0, 0, 0);
-			player.getBody().setTransform(-9,0,0);
-			player2.getBody().setTransform(9,0,0);
+			if(!hand) {
+				player.getBody().setTransform(-9, 0, 0);
+				player2.getBody().setTransform(9, 0, 0);
+			}
+			else{
+				player.getBody().setTransform(9, 0, 0);
+				player2.getBody().setTransform(-9, 0, 0);
+			}
 			ball.getBody().setLinearVelocity(0, 0);
 		}
 		
@@ -280,19 +295,36 @@ public class gameScreen implements Screen{
 			public void beginContact(Contact contact) {
 				Fixture fixtureA = contact.getFixtureA();
 				Fixture fixtureB = contact.getFixtureB();
-				
-				if(fixtureA == player.getFixture() && fixtureB == ball.getFixture()){
-					float diff = ball.getBody().getPosition().y - player.getBody().getPosition().y;
-					
-					angle = (diff/player.height * 45)/360 * 2*Math.PI;
-					
+
+				if(!hand) {
+					if (fixtureA == player.getFixture() && fixtureB == ball.getFixture()) {
+						float diff = ball.getBody().getPosition().y - player.getBody().getPosition().y;
+
+						angle = (diff / player.height * 45) / 360 * 2 * Math.PI;
+
+					}
+
+					if (fixtureA == player2.getFixture() && fixtureB == ball.getFixture()) {
+						float diff = ball.getBody().getPosition().y - player2.getBody().getPosition().y;
+
+						angle = (180 - diff / player.height * 45) / 360 * 2 * Math.PI;
+
+					}
 				}
-				
-				if(fixtureA == player2.getFixture() && fixtureB == ball.getFixture()){
-					float diff = ball.getBody().getPosition().y - player2.getBody().getPosition().y;
-					
-					angle = (180 - diff/player.height * 45)/360 * 2*Math.PI;
-					
+				else{
+					if (fixtureA == player2.getFixture() && fixtureB == ball.getFixture()) {
+						float diff = ball.getBody().getPosition().y - player2.getBody().getPosition().y;
+
+						angle = (diff / player.height * 45) / 360 * 2 * Math.PI;
+
+					}
+
+					if (fixtureA == player.getFixture() && fixtureB == ball.getFixture()) {
+						float diff = ball.getBody().getPosition().y - player.getBody().getPosition().y;
+
+						angle = (180 - diff / player.height * 45) / 360 * 2 * Math.PI;
+
+					}
 				}
 				
 			}
