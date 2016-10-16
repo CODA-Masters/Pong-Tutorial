@@ -53,7 +53,6 @@ public class onlineScreen implements Screen{
 
 	public onlineScreen(Pong game, int init_side){
 
-
         this.game = game;
 
 		float screenWidth = 800;
