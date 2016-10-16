@@ -17,10 +17,12 @@ public class InputOnlineHandler implements InputProcessor{
 	 private Pong game;
 	 private float maxTop = 3.5f;
 	 private float maxBot = -3.5f;
+	 private int side;
 
-	 public InputOnlineHandler(final Pong g, onlineScreen screen, float scaleFactorX, float scaleFactorY){
+	 public InputOnlineHandler(final Pong g, onlineScreen screen, int side, float scaleFactorX, float scaleFactorY){
 	     this.screen = screen;
 	     this.target = new Vector3();
+		 this.side = side;
 	     target.set(-10,0,0);
 	     player = screen.getPlayer();
 	     player2 = screen.getPlayer2();
@@ -80,14 +82,26 @@ public class InputOnlineHandler implements InputProcessor{
 		// Enviamos nuestra posicion
 
 		float value = target.y;
-		if(player.getBody().getPosition().y > maxTop) {
-			value = maxTop;
-		}else if(player.getBody().getPosition().y < maxBot) {
-			value = maxBot;
-		}
 
-		game.actionResolver.sendPos(value, 2);
-		player.getBody().setTransform(player.getBody().getPosition().x, value,0);
+		if(side == 0) {
+			if (player.getBody().getPosition().y > maxTop) {
+				value = maxTop;
+			} else if (player.getBody().getPosition().y < maxBot) {
+				value = maxBot;
+			}
+
+			game.actionResolver.sendPos(value, 2);
+			player.getBody().setTransform(player.getBody().getPosition().x, value, 0);
+		}else{
+			if (player2.getBody().getPosition().y > maxTop) {
+				value = maxTop;
+			} else if (player2.getBody().getPosition().y < maxBot) {
+				value = maxBot;
+			}
+
+			game.actionResolver.sendPos(value, 2);
+			player2.getBody().setTransform(player2.getBody().getPosition().x, value, 0);
+		}
 
 		return true;
 	}

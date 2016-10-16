@@ -83,7 +83,6 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
                     Toast.makeText(this, "TU EMPIEZAS", Toast.LENGTH_SHORT).show();
                 }
 
-
                 pong.startOnlineGame(side);
             }
             else if (response == Activity.RESULT_CANCELED) {
