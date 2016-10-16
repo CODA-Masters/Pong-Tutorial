@@ -120,9 +120,9 @@ public class MainMenu implements Screen{
 
 		hand = preferences.getBoolean("hand", true);
 		if(hand){
-			handButton.setChecked(false);
-		}else{
 			handButton.setChecked(true);
+		}else{
+			handButton.setChecked(false);
 		}
 
 		handButton.setBounds(50, 20, 50, 50);
@@ -148,9 +148,8 @@ public class MainMenu implements Screen{
 		multiButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				//g.setScreen( new gameScreen(g,true));
-				//g.setScreen( new onlineStartScreen(g));
-				g.actionResolver.startQuickGame();
+				g.setScreen( new gameScreen(g,true));
+				//g.actionResolver.startQuickGame();
 
 			}
 		});

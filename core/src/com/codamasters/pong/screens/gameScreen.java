@@ -83,6 +83,9 @@ public class gameScreen implements Screen{
 	// Cargar objetos del juego
 	void initObjects(){
 		hand = preferences.getBoolean("hand", true);
+		if(multiplayer){
+			hand = false;
+		}
 		if(hand == false) {
 			player = new Player(world, -9, 0, 0.2f, 1.5f);
 			player2 = new Player(world, 9, 0, 0.2f, 1.5f);
