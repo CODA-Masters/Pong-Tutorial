@@ -87,7 +87,7 @@ public class onlineScreen implements Screen{
 			started = true;
 		}
 		
-		Gdx.input.setInputProcessor(new InputOnlineHandler(game, this, gameWidth / 10, gameHeight / 10));
+		Gdx.input.setInputProcessor(new InputOnlineHandler(game, this, side, gameWidth / 10, gameHeight / 10));
 		createCollisionListener();
     }
 	
@@ -317,16 +317,14 @@ public class onlineScreen implements Screen{
 
     public void updateGame(float y, float restart) {
         try {
-            //int restart = data.getInt("restart");
-            if( restart == 0){
-                side = 1;
-            }else if(restart == 1){
-                side = 0;
-            }
 
-            else if(restart == 2)
-                player2.getBody().setTransform(player2.getBody().getPosition().x, y, 0);
-            else if(restart == 3)
+            if(restart == 0) {
+				if(side == 0)
+					player2.getBody().setTransform(player2.getBody().getPosition().x, y, 0);
+				else
+					player.getBody().setTransform(player.getBody().getPosition().x, y, 0);
+			}
+            else if(restart == 1)
                 restartGame();
 
 
