@@ -76,20 +76,19 @@ public class onlineScreen implements Screen{
 		end = false;
         side = init_side;
 
+		initObjects();
+		initAssets();
+
 		if(side == 0 && !started){
 			ball.getBody().applyForce(800f,100f,0,0,true);
 			started = true;
-		}else if(side ==1 && !started){
+		}else if(side == 1 && !started){
 			ball.getBody().applyForce(-800f,100f,0,0,true);
 			started = true;
 		}
 		
-		initObjects();
-		initAssets();
-		
 		Gdx.input.setInputProcessor(new InputOnlineHandler(game, this, gameWidth / 10, gameHeight / 10));
 		createCollisionListener();
-
     }
 	
 	// Cargar objetos del juego
@@ -99,7 +98,6 @@ public class onlineScreen implements Screen{
 		bounds = new Bounds(world);
 		ball = new Ball(world,0,0);
 		module = Math.sqrt(force*force + 100f*100f);
-
 	}
 	
 	// Cargar contenido audiovisual
@@ -317,10 +315,9 @@ public class onlineScreen implements Screen{
 		batch.dispose();
 	}
 
-    public void updateGame(float y) {
+    public void updateGame(float y, float restart) {
         try {
             //int restart = data.getInt("restart");
-			int restart = 0;
             if( restart == 0){
                 side = 1;
             }else if(restart == 1){

@@ -39,6 +39,7 @@ public class InputHandlerWall implements InputProcessor{
 
 		return false;
 	}
+
 	@Override
 	public boolean keyUp(int keycode) {
 		// TODO Auto-generated method stub

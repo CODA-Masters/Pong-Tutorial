@@ -1,5 +1,6 @@
 package com.codamasters.pong.helpers;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
@@ -24,28 +25,35 @@ public class InputOnlineHandler implements InputProcessor{
 	     player2 = screen.getPlayer2();
 	     game = g;
 	 }
-	 
+
 	@Override
 	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
+
+		if(keycode == Input.Keys.BACK){
+			game.setScreen( new MainMenu(game));
+
+		}
 		return false;
 	}
+
 	@Override
 	public boolean keyUp(int keycode) {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
 	@Override
 	public boolean keyTyped(char character) {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
 		if(screen.isScored() != 0 && !screen.isEnded()){
 			screen.restartGame();
-			game.actionResolver.sendPos(0);
+			game.actionResolver.sendPos(0, 0);
 		}
 		
 		if(screen.isEnded()){
@@ -75,7 +83,7 @@ public class InputOnlineHandler implements InputProcessor{
 			value = maxBot;
 		}
 
-		game.actionResolver.sendPos(value);
+		game.actionResolver.sendPos(value, 2);
 		player.getBody().setTransform(player.getBody().getPosition().x, value,0);
 
 		return true;

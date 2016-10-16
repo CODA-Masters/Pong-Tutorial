@@ -2,6 +2,7 @@ package com.codamasters.pong;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.codamasters.pong.helpers.ActionResolver;
 import com.codamasters.pong.screens.MainMenu;
 import com.codamasters.pong.screens.onlineScreen;
@@ -46,8 +47,15 @@ public class Pong extends Game implements ApplicationListener {
 	}
 
 	public void startOnlineGame(){
-		onlineScreen = new onlineScreen(this, 0);
-		setScreen(onlineScreen);
+		final Pong pong = this;
+		Gdx.app.postRunnable(new Runnable() {
+							 @Override
+							 public void run() {
+								 onlineScreen = new onlineScreen(pong, 0);
+								 setScreen(onlineScreen);
+							 }
+					 }
+		);
 	}
 
 	public onlineScreen getOnlineGame(){

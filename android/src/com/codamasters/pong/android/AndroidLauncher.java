@@ -190,9 +190,6 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
             roomConfigBuilder.setAutoMatchCriteria(am);
             RoomConfig roomConfig = roomConfigBuilder.build();
 
-            // create room:
-            Games.RealTimeMultiplayer.create(gameHelper.getApiClient(), roomConfig);
-
             // prevent screen from sleeping during handshake
             runOnUiThread(new Runnable() {
                 @Override
@@ -200,6 +197,10 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
                     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 }
             });
+
+            // create room:
+            Games.RealTimeMultiplayer.create(gameHelper.getApiClient(), roomConfig);
+
         }
         else{
             signIn();
@@ -255,10 +256,10 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
     }
 
     @Override
-    public void sendPos(float y){
+    public void sendPos(float y, float restart){
         try{
             byte[] mensaje;
-            mensaje = ByteBuffer.allocate(4).putFloat(y).array();
+            mensaje = ByteBuffer.allocate(8).putFloat(y).putFloat(restart).array();
             Games.RealTimeMultiplayer.sendUnreliableMessageToOthers(gameHelper.getApiClient(), mensaje, mRoomId);
         }catch(Exception e){
         }
@@ -267,10 +268,12 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
     @Override
     public void onRealTimeMessageReceived(RealTimeMessage rtm) {
         float y;
+        float restart;
         byte[] b = rtm.getMessageData();
         ByteBuffer bf = ByteBuffer.wrap(b);
         y = bf.getFloat();
-        pong.getOnlineGame().updateGame(y);
+        restart = bf.getFloat();
+        pong.getOnlineGame().updateGame(y, restart);
     }
 
     @Override
