@@ -119,7 +119,7 @@ public class MainMenu implements Screen{
 		final ImageButton handButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("left-hand.png")))),null,  new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("right-hand.png")))));
 
 		hand = preferences.getBoolean("hand", true);
-		if(sound){
+		if(hand){
 			handButton.setChecked(false);
 		}else{
 			handButton.setChecked(true);
@@ -194,10 +194,10 @@ public class MainMenu implements Screen{
 		handButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if(sound){
-					sound = false;
+				if(hand){
+					hand=false;
 				}else{
-					sound=true;
+					hand=true;
 				}
 				preferences.putBoolean("hand", hand);
 				preferences.flush();
