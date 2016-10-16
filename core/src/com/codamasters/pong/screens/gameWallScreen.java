@@ -47,6 +47,7 @@ public class gameWallScreen implements Screen{
     private int highscore;
     private boolean new_highscore = false;
 	private boolean hand;
+	private boolean paused;
 
 
 	public gameWallScreen(final Pong g, boolean multiplayer){
@@ -71,6 +72,7 @@ public class gameWallScreen implements Screen{
 		score = 0;
 		scored = 0;
 		end = false;
+		paused = false;
 
 		preferences = Gdx.app.getPreferences("pong");
 		highscore = preferences.getInteger("highscore", 0);
@@ -130,6 +132,16 @@ public class gameWallScreen implements Screen{
 		return end;
 	}
 
+	public boolean isPaused(){
+		return paused;
+	}
+	public void pauseGame(){
+		paused = true;
+	}
+	public void resumeGame(){
+		paused = false;
+	}
+
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub
@@ -141,8 +153,13 @@ public class gameWallScreen implements Screen{
 		
 		Gdx.gl.glClearColor(0 / 255f, 0 / 255f, 0 / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
+
+		if(!paused) {
+			world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
+		}
+		else{
+			world.step(0, VELOCITYITERATIONS, POSITIONITERATIONS);
+		}
 		
 		camera.update();
 		camera2.update();
@@ -221,6 +238,11 @@ public class gameWallScreen implements Screen{
 		float width = layout.width;// contains the width of the current set text
 
         AssetsLoader.font.draw(batch, score+"", -width/2, 60);
+
+		// Dibujar PAUSE
+		if(paused){
+			AssetsLoader.font.draw(batch, "PAUSE",-45, 0);
+		}
 
         batch.end();
         batch2.begin();

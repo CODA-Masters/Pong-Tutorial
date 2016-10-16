@@ -32,9 +32,12 @@ public class InputHandlerWall implements InputProcessor{
 	@Override
 	public boolean keyDown(int keycode) {
 
-		if(keycode == Input.Keys.BACK){
-			game.setScreen( new MainMenu(game));
-
+		if(keycode == Input.Keys.BACK) {
+			if (screen.isPaused()) {
+				game.setScreen(new MainMenu(game));
+			} else {
+				screen.pauseGame();
+			}
 		}
 
 		return false;
@@ -55,6 +58,10 @@ public class InputHandlerWall implements InputProcessor{
 
 		if(screen.isEnded()){
 			game.setScreen( new MainMenu(game));
+		}
+
+		if(screen.isPaused()){
+			screen.resumeGame();
 		}
 		
 		return true;
