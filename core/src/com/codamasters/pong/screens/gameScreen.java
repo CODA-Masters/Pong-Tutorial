@@ -1,6 +1,7 @@
 package com.codamasters.pong.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -45,6 +46,8 @@ public class gameScreen implements Screen{
 	private GlyphLayout layout;
 	private boolean end;
 	private float force;
+	private Preferences preferences;
+	private static boolean hand;
 
 	
 	public gameScreen(final Pong g, boolean multiplayer){
@@ -60,6 +63,7 @@ public class gameScreen implements Screen{
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		layout = new GlyphLayout();
+		preferences = Gdx.app.getPreferences("pong");
 		
 		this.multiplayer = multiplayer;
 		angle = 0;
@@ -78,8 +82,15 @@ public class gameScreen implements Screen{
 	
 	// Cargar objetos del juego
 	void initObjects(){
-		player = new Player(world,-9,0,0.2f,1.5f);
-		player2 = new Player(world,9,0,0.2f,1.5f);
+		hand = preferences.getBoolean("hand", true);
+		if(hand == false) {
+			player = new Player(world, -9, 0, 0.2f, 1.5f);
+			player2 = new Player(world, 9, 0, 0.2f, 1.5f);
+		}
+		else{
+			player = new Player(world, 9, 0, 0.2f, 1.5f);
+			player2 = new Player(world, -9, 0, 0.2f, 1.5f);
+		}
 		posIA = player2.getBody().getPosition().y;
 		bounds = new Bounds(world);
 		ball = new Ball(world,0,0);

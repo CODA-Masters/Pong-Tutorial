@@ -32,6 +32,7 @@ public class MainMenu implements Screen{
 	private OrthographicCamera camera;
     private Preferences preferences;
 	public static boolean sound;
+	public static boolean hand;
 
     public MainMenu(final Pong g){
 
@@ -114,12 +115,26 @@ public class MainMenu implements Screen{
 		soundButton.setBounds(50, 330, 50, 50);
 
 
+		// Manoplas
+		final ImageButton handButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("left-hand.png")))),null,  new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("right-hand.png")))));
+
+		hand = preferences.getBoolean("hand", true);
+		if(sound){
+			handButton.setChecked(false);
+		}else{
+			handButton.setChecked(true);
+		}
+
+		handButton.setBounds(50, 20, 50, 50);
+
+
 		stage.addActor(singleButton);
 		stage.addActor(multiButton);
 		stage.addActor(wallButton);
 		stage.addActor(exitButton);
 		stage.addActor(rankingButtonWallMode);
 		stage.addActor(soundButton);
+		stage.addActor(handButton);
 
 
 
@@ -175,6 +190,19 @@ public class MainMenu implements Screen{
                 preferences.flush();
             }
         });
+
+		handButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if(sound){
+					sound = false;
+				}else{
+					sound=true;
+				}
+				preferences.putBoolean("hand", hand);
+				preferences.flush();
+			}
+		});
 
 	}
 
