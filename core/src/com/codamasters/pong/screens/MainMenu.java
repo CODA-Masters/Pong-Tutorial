@@ -114,7 +114,6 @@ public class MainMenu implements Screen{
 
 		soundButton.setBounds(50, 330, 50, 50);
 
-
 		// Manoplas
 		final ImageButton handButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("left-hand.png")))),null,  new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("right-hand.png")))));
 
@@ -145,8 +144,8 @@ public class MainMenu implements Screen{
 		multiButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				//g.setScreen( new gameScreen(g,true));
-				g.actionResolver.startQuickGame();
+				g.setScreen( new gameScreen(g,true));
+				// g.actionResolver.startQuickGame();
 
 			}
 		});

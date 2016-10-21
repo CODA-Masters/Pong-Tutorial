@@ -150,29 +150,28 @@ public class gameWallScreen implements Screen{
 
 	@Override
 	public void render(float delta) {
-		
+
 		Gdx.gl.glClearColor(0 / 255f, 0 / 255f, 0 / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		if(!paused) {
+		if (!paused) {
 			world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
-		}
-		else{
+		} else {
 			world.step(0, VELOCITYITERATIONS, POSITIONITERATIONS);
 		}
-		
+
 		camera.update();
 		camera2.update();
-        camera3.update();
+		camera3.update();
 		batch.setProjectionMatrix(camera2.combined);
-        batch2.setProjectionMatrix(camera3.combined);
+		batch2.setProjectionMatrix(camera3.combined);
 
-        shapeRenderer.setProjectionMatrix(camera.combined);
-		
+		shapeRenderer.setProjectionMatrix(camera.combined);
+
 
 		// Si la pelota se pasa de la posición del jugador 1 acaba la partida
 
-		if(!hand) {
+		if (!hand) {
 			if (ball.getBody().getPosition().x + 2 < player.getBody().getPosition().x && scored == 0) {
 				end = true;
 
@@ -184,8 +183,8 @@ public class gameWallScreen implements Screen{
 					new_highscore = true;
 				}
 			}
-		}else{
-			if(ball.getBody().getPosition().x - 2 > player.getBody().getPosition().x && scored == 0){
+		} else {
+			if (ball.getBody().getPosition().x - 2 > player.getBody().getPosition().x && scored == 0) {
 				end = true;
 
 				if (score > highscore) {
@@ -200,6 +199,13 @@ public class gameWallScreen implements Screen{
 
 
 		// Aplicar fuerza a la pelota dependiendo de en qué posición se encuentre respecto al palote
+		if (angle == 9000) {
+			if (MainMenu.getSound())
+				AssetsLoader.pong.play();
+
+			angle = 0;
+		}
+
 		if(angle != 0){
 			ball.getBody().setLinearVelocity(0,0);
 			force += 50f;
@@ -274,18 +280,26 @@ public class gameWallScreen implements Screen{
 						float diff = ball.getBody().getPosition().y - player.getBody().getPosition().y;
 
 						angle = (diff / player.height * 45) / 360 * 2 * Math.PI;
-
 					}
+
+					if (fixtureA == player2.getFixture() && fixtureB == ball.getFixture()) {
+						angle = 9000;
+					}
+
+
 				}else{
 					if (fixtureA == player2.getFixture() && fixtureB == ball.getFixture()) {
 						float diff = ball.getBody().getPosition().y - player2.getBody().getPosition().y;
 
 						angle = (diff / player2.height * 45) / 360 * 2 * Math.PI;
+					}
 
+					if (fixtureA == player.getFixture() && fixtureB == ball.getFixture()) {
+						angle = 9000;
 					}
 				}
 
-				if (fixtureA == player.getFixture() && fixtureB == ball.getFixture()) {
+				if (fixtureA == player2.getFixture() && fixtureB == ball.getFixture()) {
 					score += 1;
 				}
 			}
