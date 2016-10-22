@@ -214,19 +214,19 @@ public class gameScreen implements Screen{
 		// Si la pelota se pasa de la posición del jugador, marca punto el otro.
 
 		if(!hand) {
-			if (ball.getBody().getPosition().x + 2 < player.getBody().getPosition().x && scored == 0) {
+			if (ball.getBody().getPosition().x + 0.5f < player.getBody().getPosition().x && scored == 0) {
 				scoreP2 += 1;
 				scored = 2;
-			} else if (ball.getBody().getPosition().x - 2 > player2.getBody().getPosition().x && scored == 0) {
+			} else if (ball.getBody().getPosition().x - 0.5f > player2.getBody().getPosition().x && scored == 0) {
 				scoreP1 += 1;
 				scored = 1;
 			}
 		}
 		else{
-			if (ball.getBody().getPosition().x + 2 < player2.getBody().getPosition().x && scored == 0) {
+			if (ball.getBody().getPosition().x + 0.5f < player2.getBody().getPosition().x && scored == 0) {
 				scoreP2 += 1;
 				scored = 2;
-			} else if (ball.getBody().getPosition().x - 2 > player.getBody().getPosition().x && scored == 0) {
+			} else if (ball.getBody().getPosition().x - 0.5f > player.getBody().getPosition().x && scored == 0) {
 				scoreP1 += 1;
 				scored = 1;
 			}
@@ -292,11 +292,19 @@ public class gameScreen implements Screen{
 		AssetsLoader.font.draw(batch, scoreP2+"", 25-width/2, 60);
 		
 		if(end){
-			if(scoreP1 > scoreP2){
-				AssetsLoader.font.draw(batch, "PLAYER 1 \n       WINS",-65, 0);
+			if(!hand) {
+				if (scoreP1 > scoreP2) {
+					AssetsLoader.font.draw(batch, "PLAYER 1 \n       WINS", -65, 0);
+				} else {
+					AssetsLoader.font.draw(batch, "PLAYER 2 \n       WINS", -65, 0);
+				}
 			}
 			else{
-				AssetsLoader.font.draw(batch, "PLAYER 2 \n       WINS",-65, 0);
+				if (scoreP1 > scoreP2) {
+					AssetsLoader.font.draw(batch, "PLAYER 2 \n       WINS", -65, 0);
+				} else {
+					AssetsLoader.font.draw(batch, "PLAYER 1 \n       WINS", -65, 0);
+				}
 			}
 		}
 
