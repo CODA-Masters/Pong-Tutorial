@@ -58,7 +58,7 @@ public class InputOnlineHandler implements InputProcessor{
 
 		if(screen.isScored() != 0 && !screen.isEnded()){
 			screen.restartGame();
-			game.actionResolver.sendPos(0, 3);
+			game.actionResolver.sendPos(0, 1);
 		}
 		
 		if(screen.isEnded()){
@@ -67,6 +67,7 @@ public class InputOnlineHandler implements InputProcessor{
 		
 		return true;
 	}
+
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		// TODO Auto-generated method stub
@@ -99,7 +100,7 @@ public class InputOnlineHandler implements InputProcessor{
 				value = maxBot;
 			}
 
-			game.actionResolver.sendPos(value, 2);
+			game.actionResolver.sendPos(value, 0);
 			player2.getBody().setTransform(player2.getBody().getPosition().x, value, 0);
 		}
 

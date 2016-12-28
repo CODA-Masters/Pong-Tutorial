@@ -327,7 +327,6 @@ public class onlineScreen implements Screen{
             else if(restart == 1)
                 restartGame();
 
-
             if(side == 0 && !started){
                 ball.getBody().applyForce(800f,100f,0,0,true);
                 started = true;

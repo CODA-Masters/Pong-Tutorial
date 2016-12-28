@@ -144,8 +144,8 @@ public class MainMenu implements Screen{
 		multiButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				g.setScreen( new gameScreen(g,true));
-				// g.actionResolver.startQuickGame();
+				//g.setScreen( new gameScreen(g,true));
+				 g.actionResolver.startQuickGame();
 
 			}
 		});

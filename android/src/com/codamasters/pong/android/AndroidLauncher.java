@@ -49,6 +49,7 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
         gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
         gameHelper.enableDebugLog(true);
 
+
         GameHelper.GameHelperListener gameHelperListener = new GameHelper.GameHelperListener()
         {
             @Override
@@ -263,6 +264,15 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
             byte[] mensaje;
             mensaje = ByteBuffer.allocate(8).putFloat(y).putFloat(restart).array();
             Games.RealTimeMultiplayer.sendUnreliableMessageToOthers(gameHelper.getApiClient(), mensaje, mRoomId);
+
+            /*RealTimeMultiplayer.ReliableMessageSentCallback reliableMessageSentCallback =  new RealTimeMultiplayer.ReliableMessageSentCallback() {
+                @Override
+                public void onRealTimeMessageSent(int i, int i1, String s) {
+
+                }
+            });
+
+            Games.RealTimeMultiplayer.sendReliableMessage(gameHelper.getApiClient(),reliableMessageSentCallback, mensaje , "", "");*/
         }catch(Exception e){
         }
     }
