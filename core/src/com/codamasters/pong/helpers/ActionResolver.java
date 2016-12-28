@@ -8,6 +8,7 @@ public interface ActionResolver {
     public void submitScoreWallMode(int score);
     public void displayLeaderboardWallMode();
     public void signIn();
+    public void automaticSignIn();
     public void signOut();
     public void rateGame();
     public boolean isSignedIn();

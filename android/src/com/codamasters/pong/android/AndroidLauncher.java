@@ -126,6 +126,12 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
     }
 
     @Override
+    public void automaticSignIn(){
+        gameHelper.beginUserInitiatedSignIn();
+        gameHelper.getApiClient().connect();
+    }
+
+    @Override
     public void signOut(){
         try{
             runOnUiThread(new Runnable() {
@@ -201,7 +207,7 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
 
         }
         else{
-            signIn();
+            automaticSignIn();
         }
     }
 

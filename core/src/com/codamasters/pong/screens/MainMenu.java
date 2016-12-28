@@ -199,6 +199,11 @@ public class MainMenu implements Screen{
 			}
 		});
 
+
+		// Sign in at start !
+		g.actionResolver.automaticSignIn();
+
+
 	}
 
 	@Override
