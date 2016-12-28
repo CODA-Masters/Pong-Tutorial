@@ -91,7 +91,7 @@ public class InputOnlineHandler implements InputProcessor{
 				value = maxBot;
 			}
 
-			game.actionResolver.sendPos(value, 2);
+			game.actionResolver.sendPos(value, 0);
 			player.getBody().setTransform(player.getBody().getPosition().x, value, 0);
 		}else{
 			if (player2.getBody().getPosition().y > maxTop) {
