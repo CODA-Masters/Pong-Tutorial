@@ -50,6 +50,7 @@ public class onlineScreen implements Screen{
     private final int PUNTUACION = 5;
     private Integer side=null;
     private boolean started = false;
+	private boolean scored_me = false;
 
 	public onlineScreen(Pong game, int init_side){
 
@@ -141,6 +142,7 @@ public class onlineScreen implements Screen{
 			break;
 		}
 		scored = 0;
+
 	}
 
 	@Override
@@ -200,11 +202,20 @@ public class onlineScreen implements Screen{
 		shapeRenderer.begin(ShapeType.Filled);
 		
 		// Dibujar jugador 1
-		shapeRenderer.setColor(1, 1, 1, 1);
+
+		if(side == 0)
+			shapeRenderer.setColor(1, 1, 1, 1);
+		else
+			shapeRenderer.setColor(1, 0, 0, 1);
+
 		shapeRenderer.rect(player.getBody().getPosition().x-player.width, player.getBody().getPosition().y-player.height, player.width*2, player.height*2);
 		
 		// Dibujar jugador 2
-		shapeRenderer.setColor(1, 1, 1, 1);
+		if(side == 1)
+			shapeRenderer.setColor(1, 1, 1, 1);
+		else
+			shapeRenderer.setColor(1, 0, 0, 1);
+
 		shapeRenderer.rect(player2.getBody().getPosition().x - player2.width, player2.getBody().getPosition().y - player2.height, player2.width * 2, player2.height * 2);
 		
 		
@@ -326,6 +337,9 @@ public class onlineScreen implements Screen{
 			}
             else if(restart == 1)
                 restartGame();
+			// ERROR CODE
+			else if(restart == 9)
+				end = true;
 
             if(side == 0 && !started){
                 ball.getBody().applyForce(800f,100f,0,0,true);

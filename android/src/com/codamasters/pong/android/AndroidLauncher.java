@@ -331,7 +331,8 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
 
     @Override
     public void onDisconnectedFromRoom(Room room) {
-
+        pong.getOnlineGame().updateGame(0, 9);
+        Toast.makeText(getApplicationContext(), "Error. Connection finished.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -351,6 +352,7 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
 
     @Override
     public void onP2PDisconnected(String s) {
-
+        byte[] mensaje = ByteBuffer.allocate(8).putFloat(0).putFloat(9).array();
+        Games.RealTimeMultiplayer.sendUnreliableMessageToOthers(gameHelper.getApiClient(), mensaje, mRoomId);
     }
 }
