@@ -103,8 +103,8 @@ public class MainMenu implements Screen{
 		final ImageButton rankingButtonWallMode =new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("trophy.png")))));
         rankingButtonWallMode.setBounds(720, 110, 50, 80);
 
-		final ImageButton onlineModeButton =new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("globe.png")))));
-		onlineModeButton.setBounds(720, 225, 50, 50);
+		//final ImageButton onlineModeButton =new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("globe.png")))));
+		//onlineModeButton.setBounds(720, 225, 50, 50);
 
 		final ImageButton soundButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("sound_on.png")))),null,  new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("sound_off.png")))));
 
@@ -136,7 +136,7 @@ public class MainMenu implements Screen{
 		stage.addActor(rankingButtonWallMode);
 		stage.addActor(soundButton);
 		stage.addActor(handButton);
-		stage.addActor(onlineModeButton);
+		//stage.addActor(onlineModeButton);
 
 		singleButton.addListener(new ChangeListener() {
 			@Override
@@ -152,13 +152,13 @@ public class MainMenu implements Screen{
 			}
 		});
 
-		onlineModeButton.addListener(new ChangeListener() {
+		/*onlineModeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				g.actionResolver.startQuickGame();
 
 			}
-		});
+		});*/
 
 		wallButton.addListener(new ChangeListener() {
 			@Override

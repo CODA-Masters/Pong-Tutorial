@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
 
     private String creatorID;
     private String myID;
+    private ArrayList<String> parcitipants;
 
     @Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -48,7 +50,6 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
 
         gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
         gameHelper.enableDebugLog(true);
-
 
         GameHelper.GameHelperListener gameHelperListener = new GameHelper.GameHelperListener()
         {
@@ -204,6 +205,7 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
             });
 
             // create room:
+            Log.d("BROZA", gameHelper.getApiClient().toString());
             Games.RealTimeMultiplayer.create(gameHelper.getApiClient(), roomConfig);
 
         }
@@ -259,14 +261,13 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
 
         // Calculamos quien va empezar
 
-        ArrayList<String> parcitipants = room.getParticipantIds();
+        parcitipants = room.getParticipantIds();
         creatorID = parcitipants.get(0);
         myID = room.getParticipantId(Games.Players.getCurrentPlayerId(gameHelper.getApiClient()));
-
     }
 
     @Override
-    public void sendPos(float y, float restart){
+    public void sendPos(final float y, final float restart){
         try{
             byte[] mensaje;
             mensaje = ByteBuffer.allocate(8).putFloat(y).putFloat(restart).array();
@@ -275,11 +276,16 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
             /*RealTimeMultiplayer.ReliableMessageSentCallback reliableMessageSentCallback =  new RealTimeMultiplayer.ReliableMessageSentCallback() {
                 @Override
                 public void onRealTimeMessageSent(int i, int i1, String s) {
-
+                    if(i == GamesStatusCodes.STATUS_OK){
+                        pong.getOnlineGame().updateMyPosition(y);
+                    }
                 }
-            });
+            };
 
-            Games.RealTimeMultiplayer.sendReliableMessage(gameHelper.getApiClient(),reliableMessageSentCallback, mensaje , "", "");*/
+            List<String> aux = parcitipants;
+            aux.remove(myID);
+            String otherPlayer = aux.get(0);
+            Games.RealTimeMultiplayer.sendReliableMessage(gameHelper.getApiClient(),reliableMessageSentCallback, mensaje , mRoomId, otherPlayer);*/
         }catch(Exception e){
         }
     }
@@ -292,7 +298,8 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
         ByteBuffer bf = ByteBuffer.wrap(b);
         y = bf.getFloat();
         restart = bf.getFloat();
-        pong.getOnlineGame().updateGame(y, restart);
+        if(pong.getOnlineGame() != null)
+            pong.getOnlineGame().updateGame(y, restart);
     }
 
     @Override
@@ -333,6 +340,7 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
     @Override
     public void onDisconnectedFromRoom(Room room) {
         pong.getOnlineGame().updateGame(0, 9);
+        Games.RealTimeMultiplayer.leave(gameHelper.getApiClient(), this, mRoomId);
         Toast.makeText(getApplicationContext(), "Error. Connection finished.", Toast.LENGTH_SHORT).show();
     }
 

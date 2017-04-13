@@ -60,7 +60,7 @@ public class onlineScreen implements Screen{
 		float screenHeight = 400;
 		float gameWidth = 203;
 		float gameHeight = screenHeight / (screenWidth / gameWidth);
-		
+
 		camera = new OrthographicCamera(gameWidth/10, gameHeight/10);
 		camera2 = new OrthographicCamera(gameWidth*1.5f, gameHeight*1.5f);
 		world = new World(new Vector2(0, 0), true);
@@ -68,7 +68,7 @@ public class onlineScreen implements Screen{
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		layout = new GlyphLayout();
-		
+
 		angle = 0;
 		force = 800;
 		scoreP1 = 0;
@@ -87,11 +87,11 @@ public class onlineScreen implements Screen{
 			ball.getBody().applyForce(-800f,100f,0,0,true);
 			started = true;
 		}
-		
+
 		Gdx.input.setInputProcessor(new InputOnlineHandler(game, this, side, gameWidth / 10, gameHeight / 10));
 		createCollisionListener();
     }
-	
+
 	// Cargar objetos del juego
 	void initObjects(){
 		player = new Player(world,-9,0,0.2f,1.5f);
@@ -100,24 +100,24 @@ public class onlineScreen implements Screen{
 		ball = new Ball(world,0,0);
 		module = Math.sqrt(force*force + 100f*100f);
 	}
-	
+
 	// Cargar contenido audiovisual
 	void initAssets(){
 		AssetsLoader.load();
 	}
-	
+
 	public OrthographicCamera getCamera(){
 		return camera;
 	}
-	
+
 	public void setCamera(OrthographicCamera cam){
 		this.camera = cam;
 	}
-	
+
 	public Player getPlayer(){
 		return player;
 	}
-	
+
 	public Player getPlayer2(){
 		return player2;
 	}
@@ -125,11 +125,11 @@ public class onlineScreen implements Screen{
 	public int isScored(){
 		return scored;
 	}
-	
+
 	public boolean isEnded(){
 		return end;
 	}
-	
+
 	// Reinicio del juego al marcar puntos
 	public void restartGame(){
 		force = 800;
@@ -148,24 +148,24 @@ public class onlineScreen implements Screen{
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void render(float delta) {
-		
+
 		Gdx.gl.glClearColor(0 / 255f, 0 / 255f, 0 / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
+
 		world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
-		
+
 		camera.update();
 		camera2.update();
 		batch.setProjectionMatrix(camera2.combined);
 		shapeRenderer.setProjectionMatrix(camera.combined);
 
 		// Si la pelota se pasa de la posición del jugador, marca punto el otro.
-		
+
 		if(ball.getBody().getPosition().x+2 < player.getBody().getPosition().x && scored == 0){
 			scoreP2+=1;
 			scored = 2;
@@ -174,7 +174,7 @@ public class onlineScreen implements Screen{
 			scoreP1+=1;
 			scored = 1;
 		}
-		
+
 		// Reseteamos la escena a sus valores originales cuando se marca un punto
 		if (scored != 0){
 			ball.getBody().setTransform(0, 0, 0);
@@ -182,7 +182,7 @@ public class onlineScreen implements Screen{
 			player2.getBody().setTransform(9,0,0);
 			ball.getBody().setLinearVelocity(0, 0);
 		}
-		
+
 		// Aplicar fuerza a la pelota dependiendo de en qué posición se encuentre respecto al palote
 		if(angle != 0){
 			ball.getBody().setLinearVelocity(0,0);
@@ -192,15 +192,15 @@ public class onlineScreen implements Screen{
 			angle = 0;
 			AssetsLoader.pong.play();
 		}
-	
+
 		// Cuando algún jugador marca 10 puntos (a diferencia de 2) termina la partida
 		if((scoreP1 >=PUNTUACION || scoreP2 >=PUNTUACION) && Math.abs(scoreP1 - scoreP2) > 1){
 			end = true;
 		}
-		
+
 		// DIBUJAR LA ESCENA
 		shapeRenderer.begin(ShapeType.Filled);
-		
+
 		// Dibujar jugador 1
 
 		if(side == 0)
@@ -209,7 +209,7 @@ public class onlineScreen implements Screen{
 			shapeRenderer.setColor(1, 0, 0, 1);
 
 		shapeRenderer.rect(player.getBody().getPosition().x-player.width, player.getBody().getPosition().y-player.height, player.width*2, player.height*2);
-		
+
 		// Dibujar jugador 2
 		if(side == 1)
 			shapeRenderer.setColor(1, 1, 1, 1);
@@ -217,25 +217,31 @@ public class onlineScreen implements Screen{
 			shapeRenderer.setColor(1, 0, 0, 1);
 
 		shapeRenderer.rect(player2.getBody().getPosition().x - player2.width, player2.getBody().getPosition().y - player2.height, player2.width * 2, player2.height * 2);
-		
-		
+
+		// Tras dibujar envio mi posición
+		if(side == 0) {
+			game.actionResolver.sendPos(player.getBody().getPosition().y, 0);
+		}else{
+			game.actionResolver.sendPos(player2.getBody().getPosition().y, 0);
+		}
+
 		// Dibujar pelota
 		shapeRenderer.setColor(1, 1, 1, 1);
 		shapeRenderer.circle(ball.getBody().getPosition().x, ball.getBody().getPosition().y, ball.RADIUS, 32);
-		
+
 		shapeRenderer.rect(-0.05f, -50, 0.1f, 100);
-		
+
 		shapeRenderer.end();
-		
+
 		// Dibujar las puntuaciones
 		batch.begin();
-		
+
 		layout.setText(AssetsLoader.font, scoreP1 + "");
 		float width = layout.width;// contains the width of the current set text
-		
+
 		AssetsLoader.font.draw(batch, scoreP1+"",-25-width/2, 60);
 		AssetsLoader.font.draw(batch, scoreP2 + "", 25 - width / 2, 60);
-		
+
 		if(end){
             if(scoreP1 > scoreP2) {
                 //WarpController.getInstance().updateResult(WarpController.GAME_WIN, "");
@@ -245,11 +251,12 @@ public class onlineScreen implements Screen{
                 //WarpController.getInstance().handleLeave();
             }
 		}
-		
+
+
 		batch.end();
-		
+
 	}
-	
+
 	private void createCollisionListener() {
         world.setContactListener(new ContactListener() {
 
@@ -257,41 +264,41 @@ public class onlineScreen implements Screen{
 			public void beginContact(Contact contact) {
 				Fixture fixtureA = contact.getFixtureA();
 				Fixture fixtureB = contact.getFixtureB();
-				
+
 				if(fixtureA == player.getFixture() && fixtureB == ball.getFixture()){
 					float diff = ball.getBody().getPosition().y - player.getBody().getPosition().y;
-					
+
 					angle = (diff/player.height * 45)/360 * 2*Math.PI;
-					
+
 				}
-				
+
 				if(fixtureA == player2.getFixture() && fixtureB == ball.getFixture()){
 					float diff = ball.getBody().getPosition().y - player2.getBody().getPosition().y;
-					
+
 					angle = (180 - diff/player.height * 45)/360 * 2*Math.PI;
-					
+
 				}
-				
+
 			}
 
 			@Override
 			public void endContact(Contact contact) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void preSolve(Contact contact, Manifold oldManifold) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void postSolve(Contact contact, ContactImpulse impulse) {
 				// TODO Auto-generated method stub
-				
+
 			}
-        	
+
         });
 	}
 
@@ -303,7 +310,7 @@ public class onlineScreen implements Screen{
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -314,7 +321,7 @@ public class onlineScreen implements Screen{
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -335,8 +342,10 @@ public class onlineScreen implements Screen{
 				else
 					player.getBody().setTransform(player.getBody().getPosition().x, y, 0);
 			}
-            else if(restart == 1)
-                restartGame();
+            else if(restart == 1) {
+				restartGame();
+				scored = (int) y;
+			}
 			// ERROR CODE
 			else if(restart == 9)
 				end = true;

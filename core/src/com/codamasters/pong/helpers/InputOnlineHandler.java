@@ -58,7 +58,7 @@ public class InputOnlineHandler implements InputProcessor{
 
 		if(screen.isScored() != 0 && !screen.isEnded()){
 			screen.restartGame();
-			game.actionResolver.sendPos(0, 1);
+			game.actionResolver.sendPos(screen.isScored(), 1);
 		}
 		
 		if(screen.isEnded()){
@@ -91,7 +91,6 @@ public class InputOnlineHandler implements InputProcessor{
 				value = maxBot;
 			}
 
-			game.actionResolver.sendPos(value, 0);
 			player.getBody().setTransform(player.getBody().getPosition().x, value, 0);
 		}else{
 			if (player2.getBody().getPosition().y > maxTop) {
@@ -100,9 +99,10 @@ public class InputOnlineHandler implements InputProcessor{
 				value = maxBot;
 			}
 
-			game.actionResolver.sendPos(value, 0);
 			player2.getBody().setTransform(player2.getBody().getPosition().x, value, 0);
 		}
+
+		//game.actionResolver.sendPos(value, 0);
 
 		return true;
 	}
