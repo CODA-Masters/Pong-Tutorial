@@ -60,6 +60,7 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
         };
 
         gameHelper.setup(gameHelperListener);
+
     }
 
 
@@ -171,7 +172,7 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
                     getString(R.string.wall_mode_ranking_id)), 0);
         }
         else{
-            signIn();
+            automaticSignIn();
         }
     }
 
