@@ -33,6 +33,7 @@ public class MainMenu implements Screen{
     private Preferences preferences;
 	public static boolean sound;
 	public static boolean hand;
+	private static int adWallCounter = 0;
 
     public MainMenu(final Pong g){
 
@@ -40,7 +41,7 @@ public class MainMenu implements Screen{
 		stage = new Stage(new FitViewport(800,400));
 		camera = new OrthographicCamera(stage.getWidth()/3,stage.getHeight()/3);
 		batch = new SpriteBatch();
-		
+
 		// A skin can be loaded via JSON or defined programmatically, either is fine. Using a skin is optional but strongly
 		// recommended solely for the convenience of getting a texture, region, etc as a drawable, tinted drawable, etc.
 		skin = new Skin();
@@ -136,7 +137,7 @@ public class MainMenu implements Screen{
 		stage.addActor(rankingButtonWallMode);
 		stage.addActor(soundButton);
 		stage.addActor(handButton);
-		stage.addActor(onlineModeButton);
+		// stage.addActor(onlineModeButton);
 
 		singleButton.addListener(new ChangeListener() {
 			@Override
@@ -159,7 +160,7 @@ public class MainMenu implements Screen{
 		onlineModeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				//g.actionResolver.startQuickGame();
+				g.actionResolver.startQuickGame();
 				//dialog.show(stage);
 			}
 		});
@@ -167,6 +168,7 @@ public class MainMenu implements Screen{
 		wallButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				adWallCounter++;
 				g.setScreen( new gameWallScreen(g,false));
 			}
 		});
@@ -277,5 +279,7 @@ public class MainMenu implements Screen{
 	public static boolean getSound(){
 		return sound;
 	}
+
+	public static int getAdWallCount() {return adWallCounter;}
 
 }

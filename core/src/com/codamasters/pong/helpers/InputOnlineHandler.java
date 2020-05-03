@@ -58,7 +58,7 @@ public class InputOnlineHandler implements InputProcessor{
 
 		if(screen.isScored() != 0 && !screen.isEnded()){
 			screen.restartGame();
-			game.actionResolver.sendPos(screen.isScored(), 1);
+			game.actionResolver.sendPos(0, screen.isScored(), 0, 1);
 		}
 		
 		if(screen.isEnded()){

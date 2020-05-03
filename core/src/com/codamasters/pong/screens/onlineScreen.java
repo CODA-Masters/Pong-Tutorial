@@ -220,9 +220,9 @@ public class onlineScreen implements Screen{
 
 		// Tras dibujar envio mi posición
 		if(side == 0) {
-			game.actionResolver.sendPos(player.getBody().getPosition().y, 0);
+			game.actionResolver.sendPos(0, player.getBody().getPosition().y, 0, 0);
 		}else{
-			game.actionResolver.sendPos(player2.getBody().getPosition().y, 0);
+			game.actionResolver.sendPos(0, player2.getBody().getPosition().y, 0, 0);
 		}
 
 		// Dibujar pelota
@@ -252,6 +252,11 @@ public class onlineScreen implements Screen{
             }
 		}
 
+		// Si soy el host entonces envio la posición de la pelota tener los clientes sincronizados
+
+		if(side==0){
+			game.actionResolver.sendPos(ball.getBody().getPosition().x, ball.getBody().getPosition().y, ball.getBody().getPosition().angle(), 5);
+		}
 
 		batch.end();
 
@@ -333,7 +338,7 @@ public class onlineScreen implements Screen{
 		batch.dispose();
 	}
 
-    public void updateGame(float y, float restart) {
+    public void updateGame(float x, float y, float angle, float restart) {
         try {
 
             if(restart == 0) {
@@ -345,6 +350,9 @@ public class onlineScreen implements Screen{
             else if(restart == 1) {
 				restartGame();
 				scored = (int) y;
+			}
+			else if(restart == 5){
+				ball.getBody().setTransform(x, y, angle);
 			}
 			// ERROR CODE
 			else if(restart == 9)

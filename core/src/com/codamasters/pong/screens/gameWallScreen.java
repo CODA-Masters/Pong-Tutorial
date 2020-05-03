@@ -49,13 +49,15 @@ public class gameWallScreen implements Screen{
 	private boolean hand;
 	private boolean paused;
 
+	private Pong game;
 
 	public gameWallScreen(final Pong g, boolean multiplayer){
 		float screenWidth = 800;
 		float screenHeight = 400;
 		float gameWidth = 203;
 		float gameHeight = screenHeight / (screenWidth / gameWidth);
-		
+
+		game = g;
 		camera = new OrthographicCamera(gameWidth/10, gameHeight/10);
 		camera2 = new OrthographicCamera(gameWidth*1.5f, gameHeight*1.5f);
         camera3 = new OrthographicCamera(gameWidth*3f, gameHeight*3f);
@@ -258,6 +260,9 @@ public class gameWallScreen implements Screen{
                 AssetsLoader.font.draw(batch2, "Congratulations! \n New   Highscore   "+highscore, -150 , 5);
             else
 			    AssetsLoader.font.draw(batch2, "GAME  FINISHED \n Highscore   " +highscore, -100 , 5);
+
+			if(MainMenu.getAdWallCount()%2==0)
+				game.actionResolver.showInterstital();
 		}
 		
 		batch2.end();

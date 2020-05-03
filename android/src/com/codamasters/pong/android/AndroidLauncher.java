@@ -14,6 +14,9 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.codamasters.pong.Pong;
 import com.codamasters.pong.R;
 import com.codamasters.pong.helpers.ActionResolver;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.games.GamesActivityResultCodes;
 import com.google.android.gms.games.GamesStatusCodes;
@@ -41,6 +44,11 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
     private String myID;
     private ArrayList<String> parcitipants;
 
+    private static final String AD_UNIT_ID_INTERSTITIAL = "ca-app-pub-2273861139088572/4773464703";
+
+    private InterstitialAd interstitialAd;
+
+
     @Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,6 +69,19 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
         };
 
         gameHelper.setup(gameHelperListener);
+
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(AD_UNIT_ID_INTERSTITIAL);
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                //Toast.makeText(getApplicationContext(), "Finished Loading Interstitial", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onAdClosed() {
+                //Toast.makeText(getApplicationContext(), "Closed Interstitial", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -267,39 +288,43 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
     }
 
     @Override
-    public void sendPos(final float y, final float restart){
+    public void sendPos(final float x, final float y, final float angle, final float restart){
         try{
             byte[] mensaje;
-            mensaje = ByteBuffer.allocate(8).putFloat(y).putFloat(restart).array();
+            mensaje = ByteBuffer.allocate(16).putFloat(x).putFloat(y).putFloat(angle).putFloat(restart).array();
             Games.RealTimeMultiplayer.sendUnreliableMessageToOthers(gameHelper.getApiClient(), mensaje, mRoomId);
-
-            /*RealTimeMultiplayer.ReliableMessageSentCallback reliableMessageSentCallback =  new RealTimeMultiplayer.ReliableMessageSentCallback() {
-                @Override
-                public void onRealTimeMessageSent(int i, int i1, String s) {
-                    if(i == GamesStatusCodes.STATUS_OK){
-                        pong.getOnlineGame().updateMyPosition(y);
-                    }
-                }
-            };
-
-            List<String> aux = parcitipants;
-            aux.remove(myID);
-            String otherPlayer = aux.get(0);
-            Games.RealTimeMultiplayer.sendReliableMessage(gameHelper.getApiClient(),reliableMessageSentCallback, mensaje , mRoomId, otherPlayer);*/
         }catch(Exception e){
         }
     }
 
     @Override
+    public void showInterstital() {
+        try {
+            runOnUiThread(new Runnable() {
+                public void run() {
+
+                    if(!interstitialAd.isLoaded()){
+                        AdRequest interstitialRequest = new AdRequest.Builder().build();
+                        interstitialAd.loadAd(interstitialRequest);
+                    }
+                    interstitialAd.show();
+                }
+            });
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
     public void onRealTimeMessageReceived(RealTimeMessage rtm) {
-        float y;
-        float restart;
+        float x, y, angle, restart;
         byte[] b = rtm.getMessageData();
         ByteBuffer bf = ByteBuffer.wrap(b);
+        x = bf.getFloat();
         y = bf.getFloat();
+        angle = bf.getFloat();
         restart = bf.getFloat();
         if(pong.getOnlineGame() != null)
-            pong.getOnlineGame().updateGame(y, restart);
+            pong.getOnlineGame().updateGame(x ,y ,angle, restart);
     }
 
     @Override
@@ -339,7 +364,7 @@ public class AndroidLauncher extends AndroidApplication implements ActionResolve
 
     @Override
     public void onDisconnectedFromRoom(Room room) {
-        pong.getOnlineGame().updateGame(0, 9);
+        pong.getOnlineGame().updateGame(0, 0, 0, 9);
         Games.RealTimeMultiplayer.leave(gameHelper.getApiClient(), this, mRoomId);
         Toast.makeText(getApplicationContext(), "Error. Connection finished.", Toast.LENGTH_SHORT).show();
     }

@@ -50,13 +50,16 @@ public class gameScreen implements Screen{
 	private static boolean hand;
 	private boolean paused;
 
+	private Pong game;
+
 	
 	public gameScreen(final Pong g, boolean multiplayer){
 		float screenWidth = 800;
 		float screenHeight = 400;
 		float gameWidth = 203;
 		float gameHeight = screenHeight / (screenWidth / gameWidth);
-		
+
+		game = g;
 		camera = new OrthographicCamera(gameWidth/10, gameHeight/10);
 		camera2 = new OrthographicCamera(gameWidth*1.5f, gameHeight*1.5f);
 		world = new World(new Vector2(0, 0), true);
@@ -306,6 +309,8 @@ public class gameScreen implements Screen{
 					AssetsLoader.font.draw(batch, "PLAYER 1 \n       WINS", -65, 0);
 				}
 			}
+
+			game.actionResolver.showInterstital();
 		}
 
 		// Dibujar PAUSE
